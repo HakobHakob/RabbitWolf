@@ -39,6 +39,12 @@ function start() {
   setCharactersInRandomPosition(createMass, object.fence.name);
   setCharactersInRandomPosition(createMass, object.home.name);
 
+  setRabbit() ;
+  setWolf();
+  setFence();
+  setHome();
+
+
 
   // createNap(value);
   // createHome(value);
