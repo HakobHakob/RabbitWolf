@@ -1,26 +1,28 @@
 //Get the selected option value and create
-const napo = [
-  {
+const object = {
+  rabbit: {
     id: 1,
     name: 'nap',
     src: 'img/nap.jpg',
   },
-  {
+  wolf: {
     id: 2,
     name: 'gel',
     src: 'img/wolf.jpg',
   },
-  {
+  home: {
     id: 3,
     name: 'home',
     src: 'img/home.jpg',
   },
-  {
+  fence: {
     id: 4,
     name: 'fence',
     src: 'img/fence.jpg',
   },
-];
+};
+
+const FREE_CELL = 0;
 
 function start() {
   clearDivs();
@@ -28,19 +30,24 @@ function start() {
   const createMass = createEmptyMass(value);
 
   createDivs(createMass, value);
-  nodeList();
 
   wolfCount(value);
-  fenseCount(value);
+  fenceCount(value);
 
-  createNap( value);
-  createHome(value)
+  setCharactersInRandomPosition(createMass, object.rabbit.name);
+  setCharactersInRandomPosition(createMass, object.wolf.name);
+  setCharactersInRandomPosition(createMass, object.fence.name);
+  setCharactersInRandomPosition(createMass, object.home.name);
+
+
+  // createNap(value);
+  // createHome(value);
 }
 
-function createDivs(emptyMass, value) {
+function createDivs(emptyMass, matrixSize) {
   emptyMass.map((item) => {
     item.map((item) => {
-      createPlace(value);
+      createPlace(matrixSize);
     });
   });
 }
@@ -56,14 +63,14 @@ function selectValue() {
   return value;
 }
 
-function createEmptyMass(value) {
-  const zero = 0;
+function createEmptyMass(matrixSize) {
+  const matrixValue = 0;
 
-  const bigPlace = new Array(value)
-    .fill(zero)
-    .map(() => new Array(value).fill(zero));
+  const matrix = new Array(matrixSize)
+    .fill(matrixValue)
+    .map(() => new Array(matrixSize).fill(matrixValue));
 
-  return bigPlace;
+  return matrix;
 }
 
 function clearDivs() {
@@ -71,187 +78,81 @@ function clearDivs() {
   place.innerHTML = '';
 }
 
-function createPlace(value) {
+function createPlace(matrixSize) {
   const place = document.getElementById('place');
 
-  if (value == 5) {
+  if (matrixSize == 5) {
     place.style.width = '350px';
   }
 
-  if (value == 7) {
+  if (matrixSize == 7) {
     place.style.width = '450px';
   }
 
-  if (value == 10) {
+  if (matrixSize == 10) {
     place.style.width = '680px';
   }
 
- 
   const myDiv = document.createElement('div');
 
- 
-  
   place.append(myDiv);
 }
 
-
-
-function nodeList(value) {
-  // const nodeList = document.querySelectorAll('#place div');
-
-  const some = createEmptyMass(value);
-
-  const rnd = Math.floor(Math.random() * some.length);
-
-  const result = some[rnd];
-
-  console.log(result);
-
-  return result;
+function wolfCount(matrixSize) {
+  const wolfCount = Math.ceil((60 * matrixSize) / 100);
 }
 
-function wolfCount(value){
-  const wolfCount = Math.ceil((60 * value) / 100);
+function fenceCount(matrixSize) {
+  const fenceCount = Math.ceil((40 * matrixSize) / 100);
 }
 
-function fenseCount(value){
-  const fenseCount = Math.ceil((40 * value) / 100);
+function setCharactersInRandomPosition(matrixSize, character) {
+  const emptyMass = createEmptyMass(matrixSize);
+
+  let rndRow = Math.floor(Math.random() * matrixSize);
+  let rndCol = Math.floor(Math.random() * matrixSize);
+
+  if (emptyMass[rndRow][rndCol] == FREE_CELL) {
+    emptyMass[rndRow][rndCol] = character;
+  } else {
+    setCharactersInRandomPosition(matrixSize, character);
+  }
+
+  // return emptyMass;
 }
 
+function setRabbit() {
+  const arr = createEmptyMass();
+  setCharactersInRandomPosition(arr, object.rabbit.name);
 
-
-
-function createNap(value){
-
-  const emptyMass = createEmptyMass(value);
-
-      let rndRow = Math.floor(Math.random() * value);
-      let rndCol = Math.floor(Math.random() * value);
-      
-      if(emptyMass[rndRow][rndCol] == 0){
-        emptyMass[rndRow][rndCol] = 1
-      }
-      
-  
-
-  console.log(emptyMass);
-  return emptyMass
+  return emptyMass;
 }
 
-function createHome(value){
+function setWolf() {
+  const arr = setRabbit();
 
-  const emptyMass = createEmptyMass(value);
-  
-      let rndRow = Math.floor(Math.random() * value);
-      let rndCol = Math.floor(Math.random() * value);
-      
-      if(emptyMass[rndRow][rndCol] == 0){
-        emptyMass[rndRow][rndCol] = 3
-      }
-  return emptyMass
+  const wolves = wolfCount();
+
+  for (let i = 0; i < wolves; i++) {
+    setCharactersInRandomPosition(arr, object.wolf.name);
+  }
+  return arr;
 }
 
-function createWolf(value){
+function setFence() {
+  const arr = setWolf();
 
-  const wolf =  wolfCount(value);
+  const fencies = fenceCount();
 
-  const emptyMass = createEmptyMass(value);
-
-  for(let i=0; i < wolf; i++ ){
-  
-      let rndRow = Math.floor(Math.random() * value);
-      let rndCol = Math.floor(Math.random() * value);
-      
-      if(emptyMass[rndRow][rndCol] == 0){
-        emptyMass[rndRow][rndCol] = 2
-      }
-    }
-  return emptyMass
+  for (let i = 0; i < fencies; i++) {
+    setCharactersInRandomPosition(arr, object.fence.name);
+  }
+  return arr;
 }
 
-function createFense(value){
+function setHome() {
+  const arr = setFence();
+  setCharactersInRandomPosition(arr, object.home.name);
 
-  const fence =  fenseCount(value);
-
-  const emptyMass = createEmptyMass(value);
-
-  for(let i=0; i < fence; i++ ){
-  
-      let rndRow = Math.floor(Math.random() * value);
-      let rndCol = Math.floor(Math.random() * value);
-      
-      if(emptyMass[rndRow][rndCol] == 0){
-        emptyMass[rndRow][rndCol] = 4
-      }
-    }
-  return emptyMass
+  return arr;
 }
-
-// function createImg() {
-//   for (const key in napo) {
-//     if (napo[key].name) {
-//       const img = document.createElement('img');
-//       const imgSrc = napo[key].src;
-//       img.src = imgSrc;
-
-//       const node = nodeList();
-
-//       node.appendChild(img);
-//     }
-//   }
-// }
-
-// function nodeList() {
-//   const nodeList = document.querySelectorAll('#place div');
-
-//   const rnd = Math.floor(Math.random() * nodeList.length);
-
-//   const result = nodeList[rnd];
-
-//   return result;
-// }
-
-// function createImg() {
-//   for (const key in napo) {
-//     if (napo[key].name) {
-//       const img = document.createElement('img');
-//       const imgSrc = napo[key].src;
-//       img.src = imgSrc;
-
-//       const node = nodeList();
-
-//        node.appendChild(img);
-//     }
-//   }
-// }
-
-// function getNapoDivId() {
-//   const node = nodeList();
-
-//   for (let j = 0; j < node.length; j++) {
-//     if (nodeList[j].innerHTML !== '') {
-//       console.log(nodeList[j]);
-//     }
-//   }
-
-//   const result = pictureArr.filter((napoId) => napo[key].name === 'nap');
-// }
-
-
-// }
-
-// for(key in napo){
-//   if(napo[key].name === 'nap'){
-
-//     console.log(napo[key]);
-
-//   }
-// }
-
-// document.addEventListener('keypress', function onEvent(event) {
-//   if (event.key === 'ArrowLeft') {
-//     alert('hello');
-//   } else if (event.key === 'Enter') {
-//     alert('hajox');
-//   }
-// });
