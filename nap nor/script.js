@@ -1,5 +1,5 @@
 //Get the selected option value and create
-let napo = [
+const napo = [
   {
     id: 1,
     name: 'nap',
