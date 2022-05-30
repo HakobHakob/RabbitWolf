@@ -33,6 +33,7 @@ function start() {
   fenseCount(value);
 
   createNap( value);
+  createHome(value)
 }
 
 function createDivs(emptyMass, value) {
@@ -123,7 +124,6 @@ function createNap(value){
 
   const emptyMass = createEmptyMass(value);
 
-  for(let i = 0; i < value; i++){
       let rndRow = Math.floor(Math.random() * value);
       let rndCol = Math.floor(Math.random() * value);
       
@@ -131,9 +131,40 @@ function createNap(value){
         emptyMass[rndRow][rndCol] = 1
       }
       
-  }
+  
 
   console.log(emptyMass);
+  return emptyMass
+}
+
+function createHome(value){
+
+  const emptyMass = createEmptyMass(value);
+  
+      let rndRow = Math.floor(Math.random() * value);
+      let rndCol = Math.floor(Math.random() * value);
+      
+      if(emptyMass[rndRow][rndCol] == 0){
+        emptyMass[rndRow][rndCol] = 3
+      }
+  return emptyMass
+}
+
+function createWolf(value){
+
+  const wolf =  wolfCount(value);
+
+  const emptyMass = createEmptyMass(value);
+
+  for(let i=0; i < wolf; i++ ){
+  
+      let rndRow = Math.floor(Math.random() * value);
+      let rndCol = Math.floor(Math.random() * value);
+      
+      if(emptyMass[rndRow][rndCol] == 0){
+        emptyMass[rndRow][rndCol] = 2
+      }
+    }
   return emptyMass
 }
 
