@@ -29,9 +29,10 @@ function start() {
   createDivs(createMass, value);
   nodeList();
 
-  createImg( value)
+  wolfCount(value);
+  fenseCount(value);
 
-  // createImg();
+  createNap( value);
 }
 
 function createDivs(emptyMass, value) {
@@ -93,8 +94,6 @@ function createPlace(value) {
 
 
 
-//get random int
-
 function nodeList(value) {
   // const nodeList = document.querySelectorAll('#place div');
 
@@ -109,23 +108,32 @@ function nodeList(value) {
   return result;
 }
 
-function createImg( value){
+function wolfCount(value){
+  const wolfCount = Math.ceil((60 * value) / 100);
+}
+
+function fenseCount(value){
+  const fenseCount = Math.ceil((40 * value) / 100);
+}
+
+
+
+
+function createNap(value){
 
   const emptyMass = createEmptyMass(value);
 
-  console.log(emptyMass)
-
   for(let i = 0; i < value; i++){
-      let rndRow = Math.floor(Math.random() * value)
-      let rndCol = Math.floor(Math.random() * value)
-
-      console.log(rndRow,rndCol)
+      let rndRow = Math.floor(Math.random() * value);
+      let rndCol = Math.floor(Math.random() * value);
       
       if(emptyMass[rndRow][rndCol] == 0){
-        emptyMass[rndRow][rndCol] = 2
+        emptyMass[rndRow][rndCol] = 1
       }
       
   }
+
+  console.log(emptyMass);
   return emptyMass
 }
 
@@ -142,3 +150,58 @@ function createImg( value){
 //     }
 //   }
 // }
+
+// function nodeList() {
+//   const nodeList = document.querySelectorAll('#place div');
+
+//   const rnd = Math.floor(Math.random() * nodeList.length);
+
+//   const result = nodeList[rnd];
+
+//   return result;
+// }
+
+// function createImg() {
+//   for (const key in napo) {
+//     if (napo[key].name) {
+//       const img = document.createElement('img');
+//       const imgSrc = napo[key].src;
+//       img.src = imgSrc;
+
+//       const node = nodeList();
+
+//        node.appendChild(img);
+//     }
+//   }
+// }
+
+// function getNapoDivId() {
+//   const node = nodeList();
+
+//   for (let j = 0; j < node.length; j++) {
+//     if (nodeList[j].innerHTML !== '') {
+//       console.log(nodeList[j]);
+//     }
+//   }
+
+//   const result = pictureArr.filter((napoId) => napo[key].name === 'nap');
+// }
+
+
+// }
+
+// for(key in napo){
+//   if(napo[key].name === 'nap'){
+
+//     console.log(napo[key]);
+
+//   }
+// }
+
+// document.addEventListener('keypress', function onEvent(event) {
+//   if (event.key === 'ArrowLeft') {
+//     alert('hello');
+//   } else if (event.key === 'Enter') {
+//     alert('hajox');
+//   }
+// });
