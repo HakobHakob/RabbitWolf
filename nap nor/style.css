@@ -1,0 +1,62 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  background-color: lightgrey;
+  padding: 20px;
+  display: flex;
+}
+
+.selectDiv{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+#startBtn{
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background-color: pink;
+  cursor: pointer;
+  color: blue;
+
+}
+#startBtn:hover{
+  background-color:red ;
+}
+
+#gameSelect {
+  border-radius: 10px;
+  border: none;
+  float: right;
+  background-color: lightgreen;
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+}
+
+.selectOption {
+  background-color: lightblue;
+  border: none;
+  cursor: pointer;
+}
+
+#place {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  margin: 0 auto;
+}
+#place > div{
+  width: 60px;
+  height: 60px;
+  border: 1px solid black;
+  margin: 1px;
+
+}
