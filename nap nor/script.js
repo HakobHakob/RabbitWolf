@@ -26,6 +26,7 @@ function start() {
   clearDivs();
   const value = selectValue();
   const createMass = createEmptyMass(value);
+
   createDivs(createMass, value);
   nodeList();
 
@@ -163,6 +164,24 @@ function createWolf(value){
       
       if(emptyMass[rndRow][rndCol] == 0){
         emptyMass[rndRow][rndCol] = 2
+      }
+    }
+  return emptyMass
+}
+
+function createFense(value){
+
+  const fence =  fenseCount(value);
+
+  const emptyMass = createEmptyMass(value);
+
+  for(let i=0; i < fence; i++ ){
+  
+      let rndRow = Math.floor(Math.random() * value);
+      let rndCol = Math.floor(Math.random() * value);
+      
+      if(emptyMass[rndRow][rndCol] == 0){
+        emptyMass[rndRow][rndCol] = 4
       }
     }
   return emptyMass
