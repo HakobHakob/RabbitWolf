@@ -20,10 +20,6 @@ const imgDatas = {
 };
 
 const characterCord = {
-  // 37: ([newX, newY] = [x, y - 1]),//left
-  // 38: ([newX, newY] = [x - 1, y]),//up
-  // 39: ([newX, newY] = [x, y + 1]),//right
-  // 40: ([newX, newY] = [x + 1, y]),//down
   rabbit: [],
   wolf: [],
   home: [],
@@ -101,6 +97,12 @@ function setHeroesAtRandomPosition(gamePlaceArr, gameHero) {
   const y = heroPosition[1];
 
   gamePlaceArr[x][y] = gameHero;
+
+  
+
+  // if(gameHero === RABBIT){
+
+  // }
 }
 
 function setCharacters(gamePlaceArr, character, count) {
