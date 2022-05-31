@@ -1,11 +1,6 @@
 //Get the selected option value and create
 const imgDatas = {
-  rabbit: {
-    id: 1,
-    name: 'nap',
-    src: 'img/nap.jpg',
-    count: 1,
-  },
+  rabbit: { id: 1, name: 'nap', src: 'img/nap.jpg', count: 1 },
   wolf: {
     id: 2,
     name: 'gel',
@@ -24,25 +19,49 @@ const imgDatas = {
   },
 };
 
+const characterCord = {
+  // 37: ([newX, newY] = [x, y - 1]),//left
+  // 38: ([newX, newY] = [x - 1, y]),//up
+  // 39: ([newX, newY] = [x, y + 1]),//right
+  // 40: ([newX, newY] = [x + 1, y]),//down
+  rabbit: [],
+  wolf: [],
+  home: [],
+  fence: [],
+};
+
 const FREE_CELL = 0;
+const RABBIT = imgDatas.rabbit.name;
 const WOLF = imgDatas.wolf.name;
 const HOME = imgDatas.home.name;
 const FENCE = imgDatas.fence.name;
-const RABBIT = imgDatas.rabbit.name;
 
 function start() {
   const value = selectValue();
   const createMass = createEmptyMass(value);
 
+  console.log(createMass);
+
   imgDatas.wolf.count = Math.ceil((60 * value) / 100);
   imgDatas.fence.count = Math.ceil((40 * value) / 100);
-  console.log(createMass);
 
   getRandomPosition(createMass);
 
   Object.values(imgDatas).map((elemnt) => {
     setCharacters(createMass, elemnt.name, elemnt.count);
   });
+
+  const rabbitCoordinates = findCordOfCharacter(createMass, RABBIT);
+  characterCord.rabbit = rabbitCoordinates;
+
+  const wolvesCoordinates = findCordOfCharacter(createMass, WOLF);
+  characterCord.wolf = wolvesCoordinates;
+
+  const homeCoordinates = findCordOfCharacter(createMass, HOME);
+  characterCord.home = homeCoordinates;
+
+  const fenceiesCoordinates = findCordOfCharacter(createMass, FENCE);
+  characterCord.fence = fenceiesCoordinates;
 }
 
 function selectValue() {
@@ -57,7 +76,6 @@ function selectValue() {
 }
 
 function createEmptyMass(gameBoardSize) {
-
   const gameBoard = new Array(gameBoardSize)
     .fill(FREE_CELL)
     .map(() => new Array(gameBoardSize).fill(FREE_CELL));
@@ -90,3 +108,45 @@ function setCharacters(gamePlaceArr, character, count) {
     setHeroesAtRandomPosition(gamePlaceArr, character);
   }
 }
+
+function findCordOfCharacter(gamePlaceArr, character) {
+  // console.log(gamePlaceArr)
+
+  const findInGameplace = function (accumulator, row, x) {
+    row.forEach((element, y) => {
+      if (element === character) {
+        accumulator.push([x, y]);
+      }
+    });
+    return accumulator;
+  };
+  return gamePlaceArr.reduce(findInGameplace, []);
+}
+
+document.addEventListener('keydown', changerabbitCoordinates);
+
+function changerabbitCoordinates(event) {
+  const rabbitCoord = characterCord.rabbit;
+
+  const rabbitNewCoord = rabbitCoord.map((rabbitCoord) => {
+    const [x, y] = rabbitCoord;
+
+    const newCoordinates = {
+      ArrowLeft: ([newX, newY] = [x, y - 1]), //left
+      ArrowUp: ([newX, newY] = [x - 1, y]), //up
+      ArrowRight: ([newX, newY] = [x, y + 1]), //right
+      ArrowDown: ([newX, newY] = [x + 1, y]), //down
+    }[event.key];
+
+    
+    return newCoordinates;
+    characterCord.rabbit = newCoordinates;
+
+    //  characterCord.rabbit = [0,0];
+    
+  });
+
+  console.log(rabbitNewCoord, 'gujyy');
+}
+
+

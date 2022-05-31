@@ -20,6 +20,7 @@
   padding: 10px;
   border-radius: 10px;
   border: none;
+  outline: none;
   background-color: pink;
   cursor: pointer;
   color: blue;
@@ -27,6 +28,7 @@
 }
 #startBtn:hover{
   background-color:red ;
+  
 }
 
 #gameSelect {
@@ -34,6 +36,7 @@
   border: none;
   float: right;
   background-color: lightgreen;
+  outline: none;
   cursor: pointer;
   padding: 10px;
   margin: 10px;
