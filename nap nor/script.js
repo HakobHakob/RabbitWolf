@@ -57,7 +57,6 @@ function selectValue() {
 }
 
 function createEmptyMass(gameBoardSize) {
-  const gameBoardValue = 0;
 
   const gameBoard = new Array(gameBoardSize)
     .fill(FREE_CELL)
