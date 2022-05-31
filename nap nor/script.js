@@ -112,7 +112,6 @@ function setCharacters(gamePlaceArr, character, count) {
 }
 
 function findCordOfCharacter(gamePlaceArr, character) {
-  // console.log(gamePlaceArr)
 
   const findInGameplace = function (accumulator, row, x) {
     row.forEach((element, y) => {
@@ -127,26 +126,27 @@ function findCordOfCharacter(gamePlaceArr, character) {
 
 document.addEventListener('keydown', changerabbitCoordinates);
 
+
+
 function changerabbitCoordinates(event) {
+
   const rabbitCoord = characterCord.rabbit;
 
   const rabbitNewCoord = rabbitCoord.map((rabbitCoord) => {
     const [x, y] = rabbitCoord;
 
-    const newCoordinates = {
+    return {
       ArrowLeft: ([newX, newY] = [x, y - 1]), //left
       ArrowUp: ([newX, newY] = [x - 1, y]), //up
       ArrowRight: ([newX, newY] = [x, y + 1]), //right
       ArrowDown: ([newX, newY] = [x + 1, y]), //down
     }[event.key];
 
-    
-    return newCoordinates;
-    characterCord.rabbit = newCoordinates;
-
-    //  characterCord.rabbit = [0,0];
-    
   });
+  
+  characterCord.rabbit = rabbitNewCoord;
+
+   findCordOfCharacter(gamePlaceArr, character)
 
   console.log(rabbitNewCoord, 'gujyy');
 }
