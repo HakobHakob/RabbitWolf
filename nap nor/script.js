@@ -4,7 +4,7 @@ const imgDatas = {
     id: 1,
     name: 'nap',
     src: 'img/nap.jpg',
-    count:1,
+    count: 1,
   },
   wolf: {
     id: 2,
@@ -15,7 +15,7 @@ const imgDatas = {
     id: 3,
     name: 'home',
     src: 'img/home.jpg',
-    count:1,
+    count: 1,
   },
   fence: {
     id: 4,
@@ -25,8 +25,10 @@ const imgDatas = {
 };
 
 const FREE_CELL = 0;
-
-
+const WOLF = imgDatas.wolf.name;
+const HOME = imgDatas.home.name;
+const FENCE = imgDatas.fence.name;
+const RABBIT = imgDatas.rabbit.name;
 
 function start() {
   const value = selectValue();
@@ -38,14 +40,9 @@ function start() {
 
   getRandomPosition(createMass);
 
-  
-
-  const WOLF = imgDatas.wolf.name;
-  const HOME = imgDatas.home.name;
-  const FENCE = imgDatas.fence.name;
-  const RABBIT = imgDatas.rabbit.name;
-
-  Object.values(imgDatas).map((elemnt) =>{setCharacters(createMass, elemnt.name,elemnt.count);})
+  Object.values(imgDatas).map((elemnt) => {
+    setCharacters(createMass, elemnt.name, elemnt.count);
+  });
 }
 
 function selectValue() {
