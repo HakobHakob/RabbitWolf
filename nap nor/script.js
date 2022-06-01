@@ -134,7 +134,7 @@ function keyDownLeft(gamePlaceArr, character){
 
  
 
-  const [x, y] = findCordOfCharacter(gamePlaceArr, character);
+  const [x, y] = rabbitCoord;
 
   console.log([x,y])
   // const rabbitCoord = imgDatas.rabbit;
