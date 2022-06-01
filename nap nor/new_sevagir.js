@@ -109,7 +109,7 @@ const objImg = {
   
   function rabbitMovements(array, character) {
     window.onkeydown = () => {
-      // console.log(array[x][y])
+      
       if (event.key === "ArrowRight") {
         keyDownArrowRight(array, character);
         console.log(array);

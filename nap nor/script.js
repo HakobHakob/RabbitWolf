@@ -19,13 +19,6 @@ const imgDatas = {
   },
 };
 
-const characterCord = {
-  rabbit: [],
-  wolf: [],
-  home: [],
-  fence: [],
-};
-
 const FREE_CELL = 0;
 const RABBIT = imgDatas.rabbit.name;
 const WOLF = imgDatas.wolf.name;
@@ -47,17 +40,19 @@ function start() {
     setCharacters(createMass, elemnt.name, elemnt.count);
   });
 
-  const rabbitCoordinates = findCordOfCharacter(createMass, RABBIT);
-  characterCord.rabbit = rabbitCoordinates;
+  let some = findCordOfCharacter(createMass, RABBIT);
+  const  rabbitCoord  = Array.from(some);
 
-  const wolvesCoordinates = findCordOfCharacter(createMass, WOLF);
-  characterCord.wolf = wolvesCoordinates;
+  console.log(rabbitCoord)
 
-  const homeCoordinates = findCordOfCharacter(createMass, HOME);
-  characterCord.home = homeCoordinates;
 
-  const fenceiesCoordinates = findCordOfCharacter(createMass, FENCE);
-  characterCord.fence = fenceiesCoordinates;
+
+ 
+
+  moveRabbit(createMass, RABBIT,rabbitCoord)
+
+
+ 
 }
 
 function selectValue() {
@@ -91,18 +86,12 @@ function getRandomPosition(gamePlaceArr) {
 }
 
 function setHeroesAtRandomPosition(gamePlaceArr, gameHero) {
-  const heroPosition = getRandomPosition(gamePlaceArr);
 
-  const x = heroPosition[0];
-  const y = heroPosition[1];
+  const [x, y] = getRandomPosition(gamePlaceArr);
 
   gamePlaceArr[x][y] = gameHero;
 
   
-
-  // if(gameHero === RABBIT){
-
-  // }
 }
 
 function setCharacters(gamePlaceArr, character, count) {
@@ -111,44 +100,171 @@ function setCharacters(gamePlaceArr, character, count) {
   }
 }
 
-function findCordOfCharacter(gamePlaceArr, character) {
 
-  const findInGameplace = function (accumulator, row, x) {
-    row.forEach((element, y) => {
-      if (element === character) {
-        accumulator.push([x, y]);
+
+// function findCordOfCharacter(gamePlaceArr, character) {
+
+//   const findInGameplace = function (accumulator, row, x) {
+//     row.forEach((element, y) => {
+//       if (element === character) {
+//         accumulator.push([x, y]);
+//       }
+//     });
+//     return accumulator;
+//   };
+//   return gamePlaceArr.reduce(findInGameplace, []);
+// }
+
+
+
+function findCordOfCharacter(gamePlaceArr, character){
+  for (let i = 0; i < gamePlaceArr.length; i++) {
+    for (let k = 0; k < gamePlaceArr.length; k++) {
+      if (gamePlaceArr[i][k] === character) {
+        return [i, k];
       }
-    });
-    return accumulator;
-  };
-  return gamePlaceArr.reduce(findInGameplace, []);
+    }
+  }
 }
 
-document.addEventListener('keydown', changerabbitCoordinates);
 
 
 
-function changerabbitCoordinates(event) {
+function keyDownLeft(gamePlaceArr, character){
 
-  const rabbitCoord = characterCord.rabbit;
+ 
 
-  const rabbitNewCoord = rabbitCoord.map((rabbitCoord) => {
-    const [x, y] = rabbitCoord;
+  const [x, y] = findCordOfCharacter(gamePlaceArr, character);
 
-    return {
-      ArrowLeft: ([newX, newY] = [x, y - 1]), //left
-      ArrowUp: ([newX, newY] = [x - 1, y]), //up
-      ArrowRight: ([newX, newY] = [x, y + 1]), //right
-      ArrowDown: ([newX, newY] = [x + 1, y]), //down
-    }[event.key];
+  console.log([x,y])
+  // const rabbitCoord = imgDatas.rabbit;
+  //  = rabbitCoord;
 
-  });
+  if(gamePlaceArr[x][y - 1] === FREE_CELL){
+
+    gamePlaceArr[x][y] = FREE_CELL;
+    gamePlaceArr[x][y - 1] = character;
+
+  } else if(gamePlaceArr[x][y - 1] === WOLF ){
+
+    alert('GAME OVER');
+
+  } else if(gamePlaceArr[x][y - 1] === HOME ){
+
+    alert('You Won!');
+  }
+
+}
+
+function keyDownRight(gamePlaceArr, character,rabbitCoord){
+  const [x, y] = rabbitCoord;
+  // const rabbitCoord = imgDatas.rabbit;
+  //  = rabbitCoord;
+
+  if(gamePlaceArr[x][ y + 1] === FREE_CELL){
+
+    gamePlaceArr[x][y] = FREE_CELL;
+    gamePlaceArr[x][y + 1] = character;
+
+  } else if(gamePlaceArr[x][y + 1] === WOLF ){
+
+    alert('GAME OVER');
+
+  } else if(gamePlaceArr[x][y + 1] === HOME ){
+    
+    alert('You Won!');
+  }
+
+}
+
+function keyDownDown(gamePlaceArr, character,rabbitCoord){
+  const [x, y] = rabbitCoord;
+  // const rabbitCoord = imgDatas.rabbit;
+  //  = rabbitCoord;
+
+  if(gamePlaceArr[x + 1] [y] === FREE_CELL){
+
+    gamePlaceArr[x][y] = FREE_CELL;
+    gamePlaceArr[x + 1] [y] = character;
+
+  } else if(gamePlaceArr[x + 1] [y] === WOLF ){
+
+    alert('GAME OVER');
+
+  } else if(gamePlaceArr[x][y + 1] === HOME ){
+    
+    alert('You Won!');
+  }
+
+}
+
+function keyDownUp(gamePlaceArr, character,rabbitCoord){
+  const [x, y] = rabbitCoord;
+
+  // const rabbitCoord = imgDatas.rabbit;
+  //  = rabbitCoord;
+
+  if(gamePlaceArr[x - 1] [y] === FREE_CELL){
+
+    gamePlaceArr[x][y] = FREE_CELL;
+    gamePlaceArr[x - 1] [y] = character;
+
+  } else if(gamePlaceArr[x - 1] [y] === WOLF ){
+
+    alert('GAME OVER');
+
+  } else if(gamePlaceArr[x - 1] [y] === HOME ){
+    
+    alert('You Won!');
+  }
+
+}
+
+window.addEventListener('keydown', moveRabbit);
+function moveRabbit(gamePlaceArr, character,rabbitCoord) {
+
+  // console.log(gamePlaceArr,'MATRIX');
+  // console.log(character,'NAP');
+
+  if (event.key === "ArrowLeft") {
+    keyDownLeft(gamePlaceArr, character,rabbitCoord);
+    console.log(gamePlaceArr);
+
+  } else if (event.key ===  "ArrowRight" ) {
+    keyDownRight(gamePlaceArr, character,rabbitCoord);
+    console.log(gamePlaceArr);
+
+  } else if (event.key === "ArrowDown" ) {
+    keyDownDown(gamePlaceArr, character,rabbitCoord);
+    console.log(gamePlaceArr);
+
+  } else if (event.key === "ArrowUp") {
+    keyDownUp(gamePlaceArr, character,rabbitCoord);
+    console.log(gamePlaceArr);
+
+   
+   }
+};
+
+  // const rabbitCoord = imgDatas.rabbit;
+
+  // const rabbitNewCoord = rabbitCoord.map((rabbitCoord) => {
+  //   const [x, y] = rabbitCoord;
+
+  //   return {
+  //     ArrowLeft: ([newX, newY] = [x, y - 1]), //left
+  //     ArrowUp: ([newX, newY] = [x - 1, y]), //up
+  //     ArrowRight: ([newX, newY] = [x, y + 1]), //right
+  //     ArrowDown: ([newX, newY] = [x + 1, y]), //down
+  //   }[event.key];
+
+  // });
   
-  characterCord.rabbit = rabbitNewCoord;
+  // characterCord.rabbit = rabbitNewCoord;
 
-   findCordOfCharacter(gamePlaceArr, character)
+   
 
-  console.log(rabbitNewCoord, 'gujyy');
-}
+  // console.log(rabbitNewCoord, 'gujyy');
+// }
 
 
