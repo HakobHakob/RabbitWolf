@@ -223,9 +223,6 @@ function keyDownUp(gamePlaceArr, character,rabbitCoord){
 window.addEventListener('keydown', moveRabbit);
 function moveRabbit(gamePlaceArr, character,rabbitCoord) {
 
-  // console.log(gamePlaceArr,'MATRIX');
-  // console.log(character,'NAP');
-
   if (event.key === "ArrowLeft") {
     keyDownLeft(gamePlaceArr, character,rabbitCoord);
     console.log(gamePlaceArr);
