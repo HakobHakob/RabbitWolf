@@ -19,7 +19,7 @@ const imgDatas = {
   },
 };
 
-const FREE_CELL = 0;
+let FREE_CELL = 0;
 const RABBIT = imgDatas.rabbit.name;
 const WOLF = imgDatas.wolf.name;
 const HOME = imgDatas.home.name;
@@ -40,12 +40,9 @@ function start() {
     setCharacters(createMass, elemnt.name, elemnt.count);
   });
 
-  let some = findCordOfCharacter(createMass, RABBIT);
-  const rabbitCoord = Array.from(some);
+  moveRabbit(createMass, RABBIT);
 
-  console.log(rabbitCoord);
-
-  moveRabbit(createMass, RABBIT, rabbitCoord);
+  wolvesCoord(createMass, WOLF);
 }
 
 function selectValue() {
@@ -90,113 +87,175 @@ function setCharacters(gamePlaceArr, character, count) {
   }
 }
 
-// function findCordOfCharacter(gamePlaceArr, character) {
-
-//   const findInGameplace = function (accumulator, row, x) {
-//     row.forEach((element, y) => {
-//       if (element === character) {
-//         accumulator.push([x, y]);
-//       }
-//     });
-//     return accumulator;
-//   };
-//   return gamePlaceArr.reduce(findInGameplace, []);
-// }
-
 function findCordOfCharacter(gamePlaceArr, character) {
-  for (let i = 0; i < gamePlaceArr.length; i++) {
-    for (let k = 0; k < gamePlaceArr.length; k++) {
-      if (gamePlaceArr[i][k] === character) {
-        return [i, k];
+  const findInGameplace = function (accumulator, row, x) {
+    row.forEach((element, y) => {
+      if (element === character) {
+        accumulator.push([x, y]);
       }
+    });
+    return accumulator;
+  };
+  return gamePlaceArr.reduce(findInGameplace, []);
+}
+
+function keyDownLeft(gamePlaceArr, character) {
+  const rabbitCord = findCordOfCharacter(gamePlaceArr, character)[0];
+
+  const [x, y] = rabbitCord;
+
+  const newY = (y - 1) % gamePlaceArr.length;
+
+  console.log(newY, 'new y');
+
+  if (gamePlaceArr[x][newY] === FREE_CELL) {
+    gamePlaceArr[x][y] = FREE_CELL;
+    gamePlaceArr[x][newY] = character;
+  } else if (gamePlaceArr[x][newY] === WOLF) {
+    alert('GAME OVER');
+  } else if (gamePlaceArr[x][newY] === HOME) {
+    alert('You Won!');
+  } else if (newY < FREE_CELL) {
+    const newY = gamePlaceArr.length - 1;
+
+    if (gamePlaceArr[x][newY] === FREE_CELL) {
+      gamePlaceArr[x][y] = FREE_CELL;
+      gamePlaceArr[x][newY] = character;
+    } else if (gamePlaceArr[x][newY] === WOLF) {
+      alert('GAME OVER');
+    } else if (gamePlaceArr[x][newY] === HOME) {
+      alert('You Won!');
     }
   }
 }
 
-function keyDownLeft(gamePlaceArr, character,rabbitCoord) {
-  const [x, y] = rabbitCoord;
+function keyDownRight(gamePlaceArr, character) {
+  const rabbitCord = findCordOfCharacter(gamePlaceArr, character)[0];
 
-  console.log([x, y]);
-  // const rabbitCoord = imgDatas.rabbit;
-  //  = rabbitCoord;
+  const [x, y] = rabbitCord;
 
-  if (gamePlaceArr[x][y - 1] === FREE_CELL) {
+  const newY = (y + 1) % gamePlaceArr.length;
+
+  if (gamePlaceArr[x][newY] === FREE_CELL) {
     gamePlaceArr[x][y] = FREE_CELL;
-    gamePlaceArr[x][y - 1] = character;
-  } else if (gamePlaceArr[x][y - 1] === WOLF) {
+    gamePlaceArr[x][newY] = character;
+  } else if (gamePlaceArr[x][newY] === WOLF) {
     alert('GAME OVER');
-  } else if (gamePlaceArr[x][y - 1] === HOME) {
+  } else if (gamePlaceArr[x][newY] === HOME) {
     alert('You Won!');
+  } else if (newY === FREE_CELL) {
+    if (gamePlaceArr[x][newY] === FREE_CELL) {
+      gamePlaceArr[x][y] = FREE_CELL;
+      gamePlaceArr[x][newY] = character;
+    } else if (gamePlaceArr[x][newY] === WOLF) {
+      alert('GAME OVER');
+    } else if (gamePlaceArr[x][newY] === HOME) {
+      alert('You Won!');
+    }
   }
 }
 
-function keyDownRight(gamePlaceArr, character, rabbitCoord) {
-  const [x, y] = rabbitCoord;
-  // const rabbitCoord = imgDatas.rabbit;
-  //  = rabbitCoord;
+function keyDownDown(gamePlaceArr, character) {
+  const rabbitCord = findCordOfCharacter(gamePlaceArr, character)[0];
 
-  if (gamePlaceArr[x][y + 1] === FREE_CELL) {
+  const [x, y] = rabbitCord;
+
+  const newX = (x + 1) % gamePlaceArr.length;
+
+  if (gamePlaceArr[newX][y] === FREE_CELL) {
     gamePlaceArr[x][y] = FREE_CELL;
-    gamePlaceArr[x][y + 1] = character;
-  } else if (gamePlaceArr[x][y + 1] === WOLF) {
+    gamePlaceArr[newX][y] = character;
+  } else if (gamePlaceArr[newX][y] === WOLF) {
     alert('GAME OVER');
-  } else if (gamePlaceArr[x][y + 1] === HOME) {
+  } else if (gamePlaceArr[newX][y] === HOME) {
     alert('You Won!');
+  } else if (newX === FREE_CELL) {
+    if (gamePlaceArr[newX][y] === FREE_CELL) {
+      gamePlaceArr[x][y] = FREE_CELL;
+      gamePlaceArr[newX][y] = character;
+    } else if (gamePlaceArr[newX][y] === WOLF) {
+      alert('GAME OVER');
+    } else if (gamePlaceArr[newX][y] === HOME) {
+      alert('You Won!');
+    }
   }
 }
 
-function keyDownDown(gamePlaceArr, character, rabbitCoord) {
-  const [x, y] = rabbitCoord;
-  // const rabbitCoord = imgDatas.rabbit;
-  //  = rabbitCoord;
+function keyDownUp(gamePlaceArr, character) {
+  const rabbitCord = findCordOfCharacter(gamePlaceArr, character)[0];
 
-  if (gamePlaceArr[x + 1][y] === FREE_CELL) {
+  const [x, y] = rabbitCord;
+  const newX = (x - 1)  % gamePlaceArr.length;
+
+  if (newX >= FREE_CELL && gamePlaceArr[newX][y] === FREE_CELL) {
     gamePlaceArr[x][y] = FREE_CELL;
-    gamePlaceArr[x + 1][y] = character;
-  } else if (gamePlaceArr[x + 1][y] === WOLF) {
+    gamePlaceArr[newX][y] = character;
+  } else if (newX >= FREE_CELL && gamePlaceArr[newX][y] === WOLF) {
     alert('GAME OVER');
-  } else if (gamePlaceArr[x][y + 1] === HOME) {
+  } else if (newX >= FREE_CELL && gamePlaceArr[newX][y] === HOME) {
     alert('You Won!');
+  } else if (newX < FREE_CELL) {
+    const newX = gamePlaceArr.length - 1;
+
+    if (gamePlaceArr[newX][y] === FREE_CELL) {
+      gamePlaceArr[x][y] = FREE_CELL;
+      gamePlaceArr[newX][y] = character;
+    } else if (gamePlaceArr[newX][y] === WOLF) {
+      alert('GAME OVER');
+    } else if (gamePlaceArr[newX][y] === HOME) {
+      alert('You Won!');
+    }
   }
 }
 
-function keyDownUp(gamePlaceArr, character, rabbitCoord) {
-  const [x, y] = rabbitCoord;
-
-  // const rabbitCoord = imgDatas.rabbit;
-  //  = rabbitCoord;
-
-  if (gamePlaceArr[x - 1][y] === FREE_CELL) {
-    gamePlaceArr[x][y] = FREE_CELL;
-    gamePlaceArr[x - 1][y] = character;
-  } else if (gamePlaceArr[x - 1][y] === WOLF) {
-    alert('GAME OVER');
-  } else if (gamePlaceArr[x - 1][y] === HOME) {
-    alert('You Won!');
-  }
+function moveRabbit(gamePlaceArr, character) {
+  window.onkeydown = () => {
+    if (event.key === 'ArrowLeft') {
+      keyDownLeft(gamePlaceArr, character);
+      console.log(gamePlaceArr);
+    } else if (event.key === 'ArrowRight') {
+      keyDownRight(gamePlaceArr, character);
+      console.log(gamePlaceArr);
+    } else if (event.key === 'ArrowDown') {
+      keyDownDown(gamePlaceArr, character);
+      console.log(gamePlaceArr);
+    } else if (event.key === 'ArrowUp') {
+      keyDownUp(gamePlaceArr, character);
+      console.log(gamePlaceArr);
+    }
+  };
 }
 
-window.addEventListener('keydown', moveRabbit);
-function moveRabbit(gamePlaceArr, character, rabbitCoord) {
-  if (event.key === 'ArrowLeft') {
-    keyDownLeft(gamePlaceArr, character, rabbitCoord);
-    console.log(gamePlaceArr);
-  } else if (event.key === 'ArrowRight') {
-    keyDownRight(gamePlaceArr, character, rabbitCoord);
-    console.log(gamePlaceArr);
-  } else if (event.key === 'ArrowDown') {
-    keyDownDown(gamePlaceArr, character, rabbitCoord);
-    console.log(gamePlaceArr);
-  } else if (event.key === 'ArrowUp') {
-    keyDownUp(gamePlaceArr, character, rabbitCoord);
-    console.log(gamePlaceArr);
-  }
+
+
+function wolvesCoord(gamePlaceArr, character) {
+     const some = firstWolfAround(gamePlaceArr, character);
+     console.log(some,'my')
 }
 
-// const rabbitCoord = imgDatas.rabbit;
+function firstWolfAround(gamePlaceArr, character){
+  const firstWolfCord= findCordOfCharacter(gamePlaceArr, character)[0];
 
-// const rabbitNewCoord = rabbitCoord.map((rabbitCoord) => {
-//   const [x, y] = rabbitCoord;
+  const [x,y] = firstWolfCord;
+
+  const newXToUp  = (x - 1)  % gamePlaceArr.length;
+
+  const emptyBoxUp = gamePlaceArr[newXToUp][y];
+
+  if (newXToUp >= FREE_CELL && emptyBoxUp === FREE_CELL && emptyBoxUp === FENCE){
+    return gamePlaceArr[newXToUp][y];
+  } 
+
+  
+
+}
+
+
+// const wolfCoordinateFirst =  wolvesArr.map((coordinates) => {
+
+//   const [x, y] = wolvesArr;
+
+//   console.log([x,y],'x,y');
 
 //   return {
 //     ArrowLeft: ([newX, newY] = [x, y - 1]), //left
@@ -204,10 +263,10 @@ function moveRabbit(gamePlaceArr, character, rabbitCoord) {
 //     ArrowRight: ([newX, newY] = [x, y + 1]), //right
 //     ArrowDown: ([newX, newY] = [x + 1, y]), //down
 //   }[event.key];
-
 // });
 
-// characterCord.rabbit = rabbitNewCoord;
+// console.log(wolfCoordinateFirst, 'new');
 
-// console.log(rabbitNewCoord, 'gujyy');
-// }
+// wolvesArr.forEach((element) =>  [x,y] = element);
+
+// console.log([x,y],'my');
