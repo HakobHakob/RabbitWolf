@@ -1,6 +1,10 @@
-//Get the selected option value and create
 const imgDatas = {
-  rabbit: { id: 1, name: 'nap', src: 'img/nap.jpg', count: 1 },
+  rabbit: {
+    id: 1,
+    name: 'nap',
+    src: 'img/nap.jpg',
+    count: 1,
+  },
   wolf: {
     id: 2,
     name: 'gel',
@@ -42,7 +46,7 @@ function start() {
 
   moveRabbit(createMass, RABBIT);
 
-  wolvesCoord(createMass, WOLF);
+  // wolvesCoord(createMass, WOLF);
 }
 
 function selectValue() {
@@ -105,8 +109,6 @@ function keyDownLeft(gamePlaceArr, character) {
   const [x, y] = rabbitCord;
 
   const newY = (y - 1) % gamePlaceArr.length;
-
-  console.log(newY, 'new y');
 
   if (gamePlaceArr[x][newY] === FREE_CELL) {
     gamePlaceArr[x][y] = FREE_CELL;
@@ -185,7 +187,7 @@ function keyDownUp(gamePlaceArr, character) {
   const rabbitCord = findCordOfCharacter(gamePlaceArr, character)[0];
 
   const [x, y] = rabbitCord;
-  const newX = (x - 1)  % gamePlaceArr.length;
+  const newX = (x - 1) % gamePlaceArr.length;
 
   if (newX >= FREE_CELL && gamePlaceArr[newX][y] === FREE_CELL) {
     gamePlaceArr[x][y] = FREE_CELL;
@@ -212,61 +214,557 @@ function moveRabbit(gamePlaceArr, character) {
   window.onkeydown = () => {
     if (event.key === 'ArrowLeft') {
       keyDownLeft(gamePlaceArr, character);
-      console.log(gamePlaceArr);
+      console.log(gamePlaceArr, 'newe arr');
+
+      wolvesAlldirection(gamePlaceArr);
+
+      // wolvesAroundEmptyCells(gamePlaceArr, WOLF);
+      // console.log(wolvesAroundEmptyCells(gamePlaceArr, WOLF),'hhh');
     } else if (event.key === 'ArrowRight') {
       keyDownRight(gamePlaceArr, character);
-      console.log(gamePlaceArr);
+      console.log(gamePlaceArr, 'new arr');
+
+      // wolvesAroundEmptyCells(gamePlaceArr, WOLF);
+      // console.log(wolvesAroundEmptyCells(gamePlaceArr, WOLF),'hhh');
     } else if (event.key === 'ArrowDown') {
       keyDownDown(gamePlaceArr, character);
-      console.log(gamePlaceArr);
+      console.log(gamePlaceArr, 'new arr');
+
+      // wolvesAroundEmptyCells(gamePlaceArr, WOLF)
+      // console.log(wolvesAroundEmptyCells(gamePlaceArr, WOLF),'hhh');
     } else if (event.key === 'ArrowUp') {
       keyDownUp(gamePlaceArr, character);
-      console.log(gamePlaceArr);
+      console.log(gamePlaceArr, 'new arr');
+
+      // wolvesAroundEmptyCells(gamePlaceArr, WOLF)
+      // console.log(wolvesAroundEmptyCells(gamePlaceArr, WOLF),'hhh');
     }
   };
 }
 
+// function wolvesCord(gamePlaceArr, WOLF) {
+//   return (wolvesCordAfterStep = findCordOfCharacter(gamePlaceArr, WOLF));
+// }
+
+function wolvesAlldirection(gamePlaceArr) {
+  const rabbitCoordinates = findCordOfCharacter(gamePlaceArr, RABBIT);
+  const wolvesCordAfterStep = findCordOfCharacter(gamePlaceArr, WOLF);
+
+  wolvesCordAfterStep.forech((element) => {
+    const wolvesEmptyCells = wolvesAroundEmptyCells(gamePlaceArr, element);
 
 
-function wolvesCoord(gamePlaceArr, character) {
-     const some = firstWolfAround(gamePlaceArr, character);
-     console.log(some,'my')
+    // calculateDistanceFromRabbitandPlace(gamePlaceArr, wolvesEmptyCells, rabbitCoordinates, element);
+  });
 }
 
-function firstWolfAround(gamePlaceArr, character){
-  const firstWolfCord= findCordOfCharacter(gamePlaceArr, character)[0];
+function wolvesAroundEmptyCells(gamePlaceArr,volvesAllCoordinates){
 
-  const [x,y] = firstWolfCord;
+  const [x, y] = volvesAllCoordinates;
 
-  const newXToUp  = (x - 1)  % gamePlaceArr.length;
+  if (x === array.length - 1) {
+    return wolvesXmax(array, wolvesCords);
+  }
+  if (x === 0) {
+    return  wolvesXmin(gamePlaceArr);
+  }
+  if (y === 0) {
+    return wolvesYmin(gamePlaceArr);
+  }
+  if (y === array.length - 1) {
+    return wolvesYmax(gamePlaceArr);
+  } else {
+    return allPositionsForAction(gamePlaceArr);
+  }
+}
 
-  const emptyBoxUp = gamePlaceArr[newXToUp][y];
+function allPositionsForAction(gamePlaceArr) {
+  const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
 
-  if (newXToUp >= FREE_CELL && emptyBoxUp === FREE_CELL && emptyBoxUp === FENCE){
-    return gamePlaceArr[newXToUp][y];
-  } 
+  const EMPTY_CELLS = [];
 
+  wolvesCordAfterStep.forEach((empty) => {
+    const [x, y] = empty;
+
+    const newYtoLeft = (y - 1) % gamePlaceArr.length;
+    const newYtoRight = (y + 1) % gamePlaceArr.length;
+    const newXtoUp = (x - 1) % gamePlaceArr.length;
+    const newXtoDown = (x + 1) % gamePlaceArr.length;
+
+    if (newYtoLeft > FREE_CELL && gamePlaceArr[x][newYtoLeft] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newYtoLeft]);
+    } else if (
+      gamePlaceArr[x][newYtoLeft] === RABBIT &&
+      gamePlaceArr[x][newYtoLeft] !== HOME &&
+      gamePlaceArr[x][newYtoLeft] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+    if (newYtoRight > FREE_CELL && gamePlaceArr[x][newYtoRight] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newYtoRight]);
+    } else if (
+      gamePlaceArr[x][newYtoRight] === RABBIT &&
+      gamePlaceArr[x][newYtoRight] !== HOME &&
+      gamePlaceArr[x][newYtoRight] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+    if (newXtoUp > FREE_CELL && gamePlaceArr[newXtoUp][y] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newXtoUp]);
+    } else if (
+      gamePlaceArr[newXtoUp][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+    if (newXtoDown > FREE_CELL && gamePlaceArr[newXtoDown][y] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newXtoDown]);
+    } else if (
+      gamePlaceArr[newXtoDown][y] === RABBIT &&
+      gamePlaceArr[newXtoDown][y] !== HOME &&
+      gamePlaceArr[newXtoDown][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+  });
+  return EMPTY_CELLS;
+}
+
+function wolvesXmax(gamePlaceArr) {
+  const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+  const EMPTY_CELLS = [];
+
+  wolvesCordAfterStep.forEach((empty) => {
+    const [x, y] = empty;
+
+    const newYtoLeft = (y - 1) % gamePlaceArr.length;
+    const newYtoRight = (y + 1) % gamePlaceArr.length;
+    const newXtoUp = (x - 1) % gamePlaceArr.length;
+
+    if (newXtoUp > FREE_CELL && gamePlaceArr[newXtoUp][y] === FREE_CELL) {
+      EMPTY_CELLS.push([newXtoUp, y]);
+
+    } else if (
+      gamePlaceArr[newXtoUp][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+    if (newYtoLeft > FREE_CELL && gamePlaceArr[x][newYtoLeft] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newYtoLeft]);
+    } else if (
+      gamePlaceArr[x][newYtoLeft] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[x][newYtoRight] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+    if (newYtoRight > FREE_CELL && gamePlaceArr[x][newYtoRight] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newXtoUp]);
+    } else if (
+      gamePlaceArr[x][newYtoRight] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+  });
+  return EMPTY_CELLS;
+}
+
+function wolvesXmin(gamePlaceArr) {
+  const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+  const EMPTY_CELLS = [];
+
+  wolvesCordAfterStep.forEach((empty) => {
+    const [x, y] = empty;
+
+    const newYtoLeft = (y - 1) % gamePlaceArr.length;
+    const newYtoRight = (y + 1) % gamePlaceArr.length;
+    const newXtoUp = (x - 1) % gamePlaceArr.length;
+    const newXtoDown = (x + 1) % gamePlaceArr.length;
+
+    if (newXtoDown > FREE_CELL && gamePlaceArr[newXtoDown][y] === FREE_CELL) {
+      EMPTY_CELLS.push([newXtoDown, y]);
+
+    } else if (
+      gamePlaceArr[newXtoDown][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+
+    if (newYtoLeft > FREE_CELL && gamePlaceArr[x][newYtoLeft] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newYtoLeft]);
+
+    } else if (
+      gamePlaceArr[x][newYtoLeft] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+
+    if (newYtoRight > FREE_CELL && gamePlaceArr[x][newYtoRight] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newYtoRight]);
+    } else if (
+      gamePlaceArr[x][newYtoRight] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+    
+  });
+  return EMPTY_CELLS;
+}
+
+function wolvesYmax(gamePlaceArr) {
+  const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+  const EMPTY_CELLS = [];
+
+  wolvesCordAfterStep.forEach((empty) => {
+    const [x, y] = empty;
+
+    const newYtoLeft = (y - 1) % gamePlaceArr.length;
+    // const newYtoRight = (y + 1) % gamePlaceArr.length;
+    const newXtoUp = (x - 1) % gamePlaceArr.length;
+    const newXtoDown = (x + 1) % gamePlaceArr.length;
+
+    if (newXtoUp > FREE_CELL && gamePlaceArr[newXtoUp][y] === FREE_CELL) {
+      EMPTY_CELLS.push([newXtoUp, y]);
+    } else if (
+      gamePlaceArr[newXtoUp][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[x][newYtoLeft] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+
+
+    if (newXtoDown > FREE_CELL && gamePlaceArr[newXtoDown][y] === FREE_CELL) {
+      EMPTY_CELLS.push([newXtoDown, y]);
+    } else if (
+      gamePlaceArr[newXtoDown][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+
+    if (newYtoLeft > FREE_CELL && gamePlaceArr[x][newYtoLeft] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newXtoUp]);
+    } else if (
+      gamePlaceArr[x][newYtoLeft] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+ 
+  });
+  return EMPTY_CELLS;
+}
+
+function wolvesYmin(gamePlaceArr) {
+  const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+  const EMPTY_CELLS = [];
+
+  wolvesCordAfterStep.forEach((empty) => {
+    const [x, y] = empty;
+
+    // const newYtoLeft = (y - 1) % gamePlaceArr.length;
+    const newYtoRight = (y + 1) % gamePlaceArr.length;
+    const newXtoUp = (x - 1) % gamePlaceArr.length;
+    const newXtoDown = (x + 1) % gamePlaceArr.length;
+
+    if (newXtoUp > FREE_CELL && gamePlaceArr[newXtoUp][y] === FREE_CELL) {
+      EMPTY_CELLS.push([newXtoUp][y]);
+
+    } else if (
+      gamePlaceArr[newXtoUp][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+
+
+
+
+
+    if (newXtoDown > FREE_CELL && gamePlaceArr[newXtoDown][y] === FREE_CELL) {
+      EMPTY_CELLS.push([newXtoDown, y]);
+    } else if (
+      gamePlaceArr[newXtoDown][y] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+
+
+
+
+
+
+    if (newYtoRight > FREE_CELL && gamePlaceArr[x][newYtoRight] === FREE_CELL) {
+      EMPTY_CELLS.push([x, newYtoRight]);
+    } else if (
+      gamePlaceArr[x][newYtoRight] === RABBIT &&
+      gamePlaceArr[newXtoUp][y] !== HOME &&
+      gamePlaceArr[newXtoUp][y] !== FENCE
+    ) {
+      alert('Game Over! Try again.');
+      return;
+    }
+
+    
+  });
+  return EMPTY_CELLS;
+}
+
+
+
+
+
+
+// function calculateDistanceFromRabbitandPlace(array, freeVellsArray, rabbitCords, item) {
+
+//   const distanceArray = []
+//   freeVellsArray.forEach((item) => {
+//     const distance = calculateDistanceFromRabbit(item, rabbitCords);
+//     distanceArray.push(distance)
+//   });
+//   // console.log(distanceArray)
+//   const max = Math.min(...distanceArray);
+//   const index = distanceArray.indexOf(max);
+//   // console.log(freeVellsArray[index])
+//   // console.log(freeVellsArray)
+//   placeWolvesIntoNewCells(array, freeVellsArray[index], item)
+// }
+
+// const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
+// function placeWolvesIntoNewCells(array, wolvesCords, item){
+//     const rabbitCords = findCharacterCords(array, RABBIT);
+//     const [x, y] = wolvesCords
+//     const[k, p] = item
+//     if(equals([x, y], rabbitCords)){
+//         alert("Game over")
+//     } else {
+//       array[x][y] = WOLF
+//       array[k][p] = EMPTY_CELL
+//     }
+      
+// }
+
+// function calculateDistanceFromRabbit(arrayItem, rabbitCords) {
   
+//   let [x, y] = arrayItem;
+//   let [z, k] = rabbitCords[0];
 
+//   return Math.round(Math.sqrt(Math.pow(x - z, 2) + Math.pow(y - k, 2)));
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function wolvesLeftEmptyCells(gamePlaceArr, WOLF) {
+//   const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+//   const LEFT_EMPTY_CELLS = [];
+
+//   wolvesCordAfterStep.forEach((empty) => {
+//     const [x, y] = empty;
+
+//     const newYtoLeft = (y - 1) % gamePlaceArr.length;
+
+//     if (
+//       newYtoLeft > FREE_CELL &&
+//       gamePlaceArr[x][newYtoLeft] === FREE_CELL &&
+//       gamePlaceArr[x][newYtoLeft] !== FENCE &&
+//       gamePlaceArr[x][newYtoLeft] !== RABBIT &&
+//       gamePlaceArr[x][newYtoLeft] !== WOLF &&
+//       gamePlaceArr[x][newYtoLeft] !== HOME
+//     ) {
+//       LEFT_EMPTY_CELLS.push([x, newYtoLeft]);
+//     } else {
+//       LEFT_EMPTY_CELLS.push([x, y]);
+//     }
+//   });
+
+//   return LEFT_EMPTY_CELLS;
+// }
+
+// function wolvesRightEmptyCells(gamePlaceArr, WOLF) {
+//   const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+//   const RIGHT_EMPTY_CELLS = [];
+
+//   wolvesCordAfterStep.forEach((empty) => {
+//     const [x, y] = empty;
+
+//     const newYtoRight = (y + 1) % gamePlaceArr.length;
+
+//     if (
+//       newYtoRight > FREE_CELL &&
+//       gamePlaceArr[x][newYtoRight] === FREE_CELL &&
+//       gamePlaceArr[x][newYtoRight] !== FENCE &&
+//       gamePlaceArr[x][newYtoRight] !== RABBIT &&
+//       gamePlaceArr[x][newYtoRight] !== WOLF
+//     ) {
+//       RIGHT_EMPTY_CELLS.push([x, newYtoRight]);
+//     } else {
+//       RIGHT_EMPTY_CELLS.push([x, y]);
+//     }
+//   });
+
+//   return RIGHT_EMPTY_CELLS;
+// }
+
+// function wolvesUpEmptyCells(gamePlaceArr, WOLF) {
+//   const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+//   const UP_EMPTY_CELLS = [];
+
+//   wolvesCordAfterStep.forEach((empty) => {
+//     const [x, y] = empty;
+
+//     const newXtoUp = (x - 1) % gamePlaceArr.length;
+
+//     if (
+//       newXtoUp > FREE_CELL &&
+//       gamePlaceArr[newXtoUp][y] === FREE_CELL &&
+//       gamePlaceArr[newXtoUp][y] !== FENCE &&
+//       gamePlaceArr[newXtoUp][y] !== RABBIT &&
+//       gamePlaceArr[newXtoUp][y] !== WOLF
+//     ) {
+//       UP_EMPTY_CELLS.push([newXtoUp, y]);
+//     } else {
+//       UP_EMPTY_CELLS.push([x, y]);
+//     }
+//   });
+
+//   return UP_EMPTY_CELLS;
+// }
+
+// function wolvesDownEmptyCells(gamePlaceArr, WOLF) {
+  const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
+
+  const DOWN_EMPTY_CELLS = [];
+
+  wolvesCordAfterStep.forEach((empty) => {
+    const [x, y] = empty;
+
+    const newXtoDown = (x + 1) % gamePlaceArr.length;
+
+    if (
+      newXtoDown > FREE_CELL &&
+      gamePlaceArr[newXtoDown][y] === FREE_CELL &&
+      gamePlaceArr[newXtoDown][y] !== FENCE &&
+      gamePlaceArr[newXtoDown][y] !== RABBIT &&
+      gamePlaceArr[newXtoDown][y] !== WOLF
+    ) {
+      DOWN_EMPTY_CELLS.push([newXtoDown, y]);
+    } else {
+      DOWN_EMPTY_CELLS.push([x, y]);
+    }
+  });
+
+  return DOWN_EMPTY_CELLS;
 }
 
-
-// const wolfCoordinateFirst =  wolvesArr.map((coordinates) => {
-
-//   const [x, y] = wolvesArr;
-
-//   console.log([x,y],'x,y');
-
+// function wolvesAroundEmptyCells(gamePlaceArr, WOLF){
 //   return {
-//     ArrowLeft: ([newX, newY] = [x, y - 1]), //left
-//     ArrowUp: ([newX, newY] = [x - 1, y]), //up
-//     ArrowRight: ([newX, newY] = [x, y + 1]), //right
-//     ArrowDown: ([newX, newY] = [x + 1, y]), //down
-//   }[event.key];
-// });
+//          "ArrowLeft"  : wolvesLeftEmptyCells(gamePlaceArr, WOLF),
+//          "ArrowRight" : wolvesRightEmptyCells(gamePlaceArr, WOLF),
+//          "ArrowUp"    : wolvesUpEmptyCells(gamePlaceArr, WOLF),
+//          "ArrowDown"  : wolvesDownEmptyCells(gamePlaceArr, WOLF),
+//         }[event.key]
 
-// console.log(wolfCoordinateFirst, 'new');
+// }
 
-// wolvesArr.forEach((element) =>  [x,y] = element);
+// function some(gamePlaceArr){
+//   const wolvesCordAfterStep = wolvesCord(gamePlaceArr, WOLF);
 
-// console.log([x,y],'my');
+//   const valod = []
+
+//   const morena = wolvesCordAfterStep.forEach((empty) => {
+//      const [x, y] = empty;
+//    return {
+
+//          "ArrowLeft" : ([newX, newY] = [x, y - 1]),
+//          "ArrowRight": ([newX, newY] = [x - 1, y]),
+//          "ArrowUp"   : ([newX, newY] = [x, y + 1]),
+//          "ArrowDown" : ([newX, newY] = [x + 1, y]),
+//          }[event.key]
+//        });
+
+//        valod.push(morena)
+
+//        return valod;
+//  }
