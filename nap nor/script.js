@@ -263,7 +263,7 @@ function wolvesAroundEmptyCells(gamePlaceArr,volvesAllCoordinates){
   const [x, y] = volvesAllCoordinates;
 
   if (x === array.length - 1) {
-    return wolvesXmax(array, wolvesCords);
+    return wolvesXmax(gamePlaceArr, wolvesCords);
   }
   if (x === 0) {
     return  wolvesXmin(gamePlaceArr);
