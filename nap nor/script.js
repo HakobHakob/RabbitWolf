@@ -17,15 +17,15 @@ const imgDatas = {
     name: 'fence',
     src: 'img/fence.jpg',
   },
-}
+};
 
-let FREE_CELL = 0
-const RABBIT = imgDatas.rabbit.name
-const WOLF = imgDatas.wolf.name
-const HOME = imgDatas.home.name
-const FENCE = imgDatas.fence.name
-const X = 0
-const Y = 1
+let FREE_CELL = 0;
+const RABBIT = imgDatas.rabbit.name;
+const WOLF = imgDatas.wolf.name;
+const HOME = imgDatas.home.name;
+const FENCE = imgDatas.fence.name;
+const X = 0;
+const Y = 1;
 
 function start() {
   clearDivs()
@@ -79,7 +79,7 @@ function setHeroesAtRandomPosition(gamePlaceArr, gameHero) {
 }
 
 function setCharacters(gamePlaceArr, character, gameHeroCount) {
-  for (let i = 0 i < gameHeroCount i++) {
+  for (let i = 0; i < gameHeroCount; i++) {
     setHeroesAtRandomPosition(gamePlaceArr, character)
   }
 }
@@ -90,7 +90,7 @@ function findCordOfCharacter(gamePlaceArr, character) {
       if (element === character) {
         accumulator.push([x, y])
       }
-    })
+    });
     return accumulator
   }
   return gamePlaceArr.reduce(findInGameplace, [])
@@ -113,7 +113,7 @@ function keyDownRightNew(gamePlaceArr) {
   const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
 
   if (rabbitCord[X][Y] === gamePlaceArr.length - 1) {
-    newCoordData.right[Y] = FREE_CELL
+    newCoordData.right[Y] = FREE_CELL;
   }
   verifyCell(gamePlaceArr, rabbitCord, newCoordData.right)
 }
@@ -193,12 +193,12 @@ function wolvesCoordinates(gamePlaceArr) {
 
   const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((element) => {
 
-    const singleWolf = findCellsArroundWolves(gamePlaceArr, element)
-    const emtyCells = findEmptyCellsAroundWolf(gamePlaceArr, singleWolf)
-    const shortDistance = shortestDistanceBox(emtyCells, gamePlaceArr)
+    const singleWolf = findCellsArroundWolves(gamePlaceArr, element);
+    const emtyCells = findEmptyCellsAroundWolf(gamePlaceArr, singleWolf);
+    const shortDistance = shortestDistanceBox(emtyCells, gamePlaceArr);
 
-    moveWolves(gamePlaceArr, element, shortDistance)
-  })
+    moveWolves(gamePlaceArr, element, shortDistance);
+  });
 
   return coordinatesAfterRabbitStep
 }
@@ -246,8 +246,8 @@ function getDistances(emtyCells, gamePlaceArr) {
   const cells = []
 
   emtyCells.forEach((cell) => {
-    cells.push(calculateDistanceFromRabbit(cell, rabbitCord))
-  })
+    cells.push(calculateDistanceFromRabbit(cell, rabbitCord));
+  });
   return cells
 }
 
@@ -268,11 +268,6 @@ function moveWolves(gamePlaceArr, wolvesCord, minDistanceData) {
 
   gamePlaceArr[a][b] = WOLF
   gamePlaceArr[q][k] = FREE_CELL
-}
-
-function clearDivs() {
-  const place = document.getElementById('place')
-  place.innerHTML = ''
 }
 
 function clearDivs() {
