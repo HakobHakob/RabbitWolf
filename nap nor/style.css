@@ -49,13 +49,14 @@
 }
 
 #place {
-  max-width: 650px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  border: 5px solid pink;
   border-radius: 10px;
   margin: 0 auto;
+  background-color: lightgreen;
 }
 #place > div{
   width: 60px;

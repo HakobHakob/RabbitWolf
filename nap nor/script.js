@@ -1,23 +1,19 @@
 const imgDatas = {
   rabbit: {
-    id: 1,
     name: 'nap',
     src: 'img/nap.jpg',
     count: 1,
   },
   wolf: {
-    id: 2,
     name: 'gel',
     src: 'img/wolf.jpg',
   },
   home: {
-    id: 3,
     name: 'home',
     src: 'img/home.jpg',
     count: 1,
   },
   fence: {
-    id: 4,
     name: 'fence',
     src: 'img/fence.jpg',
   },
@@ -37,11 +33,10 @@ function start() {
   const value = selectValue();
   const createMass = createEmptyMass(value);
 
-  gameAreaSize(value);
-
   imgDatas.wolf.count = Math.ceil((60 * value) / 100);
   imgDatas.fence.count = Math.ceil((40 * value) / 100);
 
+  gameAreaSize(value);
   getRandomPosition(createMass);
 
   Object.values(imgDatas).map((elemnt) => {
@@ -49,7 +44,6 @@ function start() {
   });
 
   moveRabbit(createMass, RABBIT);
-
   createGameArea(createMass, value);
 }
 
