@@ -10,6 +10,8 @@
   display: flex;
 }
 
+
+
 .selectDiv{
   display: flex;
   justify-content: left;
@@ -53,8 +55,6 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  border: 5px solid pink;
-  border-radius: 10px;
   margin: 0 auto;
   background-color: lightgreen;
 }
@@ -79,14 +79,14 @@
   transform: translate(-50%, -50%);
 }
 #showMessage > button{
-  border: 2px solid red;
+  border: 1px solid red;
   font-size: 30px;
   width: 150px;
   padding: 4px;
   margin: 3px;
   border-radius: 20px;
   outline: none;
-  background-color: #FFEDB2;
+  background-color: bisque;
   cursor: pointer;
   text-align: center;
   color: black;
