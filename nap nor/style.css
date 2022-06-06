@@ -70,13 +70,15 @@
   display: none;
   text-align: center;
   width: 400px;
-  height: 200px;
+  height: 300px;
   border-radius: 30px;
   background-color: #f6daff;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  background-image: url("img/nu_pogodi.jpg");
+  background-repeat: no-repeat;
 }
 #showMessage > button{
   border: 1px solid red;
@@ -89,5 +91,9 @@
   background-color: bisque;
   cursor: pointer;
   text-align: center;
-  color: black;
+  color: red;
+}
+
+#showMessage > h2{
+  color: red;
 }
