@@ -8,6 +8,7 @@
   background-color: lightgrey;
   padding: 20px;
   display: flex;
+  flex-direction: column;
 }
 
 
@@ -17,6 +18,25 @@
   justify-content: left;
   align-items: center;
 }
+
+#arrowsDiv{
+  display: inline-block;
+}
+
+#arrowsDiv > button {
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: pink;
+  cursor: pointer;
+  color: blue;
+}
+
+#arrowsDiv > button:hover{
+  background-color: lightgreen;
+}
+
 
 #startBtn{
   padding: 10px;
