@@ -17,15 +17,15 @@ const imgDatas = {
     name: 'fence',
     src: 'img/fence.jpg',
   },
-};
+}
 
-let FREE_CELL = 0;
-const RABBIT = imgDatas.rabbit.name;
-const WOLF = imgDatas.wolf.name;
-const HOME = imgDatas.home.name;
-const FENCE = imgDatas.fence.name;
-const X = 0;
-const Y = 1;
+let FREE_CELL = 0
+const RABBIT = imgDatas.rabbit.name
+const WOLF = imgDatas.wolf.name
+const HOME = imgDatas.home.name
+const FENCE = imgDatas.fence.name
+const X = 0
+const Y = 1
 
 function start() {
   clearDivs()
@@ -33,15 +33,29 @@ function start() {
   const value = selectValue()
   const createMass = createEmptyMass(value)
 
+  
+
+  
+
+  
+
   imgDatas.wolf.count = Math.ceil((60 * value) / 100)
   imgDatas.fence.count = Math.ceil((40 * value) / 100)
 
   gameAreaSize(value)
   getRandomPosition(createMass)
 
-  Object.values(imgDatas).map((elemnt) => {
-    setCharacters(createMass, elemnt.name, elemnt.count)
+  Object.values(imgDatas).map((element) => {
+    setCharacters(createMass, element.name, element.count)
+    let characters = element.name
+    
   })
+
+ 
+
+  
+
+  
 
   moveRabbit(createMass, RABBIT)
   createGameArea(createMass, value)
@@ -90,7 +104,7 @@ function findCordOfCharacter(gamePlaceArr, character) {
       if (element === character) {
         accumulator.push([x, y])
       }
-    });
+    })
     return accumulator
   }
   return gamePlaceArr.reduce(findInGameplace, [])
@@ -113,7 +127,7 @@ function keyDownRightNew(gamePlaceArr) {
   const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
 
   if (rabbitCord[X][Y] === gamePlaceArr.length - 1) {
-    newCoordData.right[Y] = FREE_CELL;
+    newCoordData.right[Y] = FREE_CELL
   }
   verifyCell(gamePlaceArr, rabbitCord, newCoordData.right)
 }
@@ -142,32 +156,43 @@ function keyDownUpNew(gamePlaceArr) {
 
 function verifyCell(gamePlaceArr, rabbitCord, rabbitNewCoordinate) {
   const [x, y] = rabbitCord[X]
-  const [i, j] = rabbitNewCoordinate
+  const [newX, newY] = rabbitNewCoordinate
 
-  if (gamePlaceArr[i][j] == FREE_CELL) {
-    gamePlaceArr[i][j] = RABBIT
-    gamePlaceArr[x][y] = FREE_CELL
-  } else if (gamePlaceArr[i][j] === HOME) {
-    gamePlaceArr[x][y] = FREE_CELL
-    showGameMessages('win')
-  } else if (gamePlaceArr[i][j] === FENCE) {
-    return
-  }
-  if (gamePlaceArr[i][j] === WOLF) {
-    showGameMessages('gameOver')
+  switch (gamePlaceArr[newX][newY]) {
+    case FREE_CELL:
+      gamePlaceArr[newX][newY] = RABBIT
+      gamePlaceArr[x][y] = FREE_CELL
+      break
+
+    case HOME:
+      gamePlaceArr[x][y] = FREE_CELL
+      showGameMessages('win')
+      break
+
+    case FENCE:
+      return
+
+    case WOLF:
+      showGameMessages('gameOver')
+      break
   }
 }
 
 function moveRabbit(gamePlaceArr) {
   window.onkeydown = (event) => {
-    if (event.key === 'ArrowLeft') {
-      keyDownLeftNew(gamePlaceArr)
-    } else if (event.key === 'ArrowRight') {
-      keyDownRightNew(gamePlaceArr)
-    } else if (event.key === 'ArrowDown') {
-      keyDownDownNew(gamePlaceArr)
-    } else if (event.key === 'ArrowUp') {
-      keyDownUpNew(gamePlaceArr)
+    switch (event.key) {
+      case 'ArrowLeft':
+        keyDownLeftNew(gamePlaceArr)
+        break
+      case 'ArrowRight':
+        keyDownRightNew(gamePlaceArr)
+        break
+      case 'ArrowDown':
+        keyDownDownNew(gamePlaceArr)
+        break
+      case 'ArrowUp':
+        keyDownUpNew(gamePlaceArr)
+        break
     }
     wolvesCoordinates(gamePlaceArr)
     clearDivs()
@@ -189,16 +214,34 @@ function newXnewYcoordinatesAfterKeyPress(rabbitcoordinates) {
 }
 
 function wolvesCoordinates(gamePlaceArr) {
+
+ 
+
+  
+
   const wolvesCordAfterStep = findCordOfCharacter(gamePlaceArr, WOLF)
+
+  const gameStat = {
+                 matrix: gamePlaceArr,
+                 isGameOver: false,
+                 gameStatus: null,
+                 character:{
+                  characterRabbit:RABBIT,
+                  characterFence:FENCE,
+                 }
+                 
+                 
+                   }
 
   const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((element) => {
 
-    const singleWolf = findCellsArroundWolves(gamePlaceArr, element);
-    const emtyCells = findEmptyCellsAroundWolf(gamePlaceArr, singleWolf);
-    const shortDistance = shortestDistanceBox(emtyCells, gamePlaceArr);
+    const singleWolf = findCellsArroundWolves(gamePlaceArr, element)
 
-    moveWolves(gamePlaceArr, element, shortDistance);
-  });
+    const emtyCells = findEmptyCellsAroundWolf(gameStat, singleWolf)
+    const shortDistance = shortestDistanceBox(emtyCells, gamePlaceArr)
+
+    moveWolves(gamePlaceArr, element, shortDistance)
+  })
 
   return coordinatesAfterRabbitStep
 }
@@ -221,15 +264,30 @@ function findCellsArroundWolves(gamePlaceArr, [x, y]) {
   return allBoxesAroundWolves
 }
 
-function findEmptyCellsAroundWolf(gamePlaceArr, cordsArray) {
+
+function findEmptyCellsAroundWolf(gameStat, cordsArray) {
+
+  const [x,y ] = cordsArray
+
+  console.log(gameStat.character)
+
+  
+
+  
+  // const isCharacter = (gameStat.character) => (gameStat.matrix,[x,y]) => gameStat.matrix === gameStat.character
+  // const isRabbit = isCharacter(RABBIT)
+  // const isFree = isCharacter(FREE_CELL)
+
+
+
   const emptyCellsArray = []
 
   cordsArray.forEach((wolf) => {
     const [x, y] = wolf
-    if (gamePlaceArr[x][y] === RABBIT) {
+    if (gameStat.matrix[x][y] === RABBIT) {
       showGameMessages('gameOver')
     }
-    if (gamePlaceArr[x][y] === FREE_CELL) {
+    if (gameStat.matrix[x][y] === FREE_CELL) {
       emptyCellsArray.push(wolf)
     }
   })
@@ -246,8 +304,8 @@ function getDistances(emtyCells, gamePlaceArr) {
   const cells = []
 
   emtyCells.forEach((cell) => {
-    cells.push(calculateDistanceFromRabbit(cell, rabbitCord));
-  });
+    cells.push(calculateDistanceFromRabbit(cell, rabbitCord))
+  })
   return cells
 }
 
@@ -343,7 +401,6 @@ function showGameMessages(gameStatus) {
 
   if (gameStatus === 'gameOver') {
     message.innerText = 'Game over'
-
   } else if (gameStatus === 'win') {
     message.innerText = 'You win'
   }
@@ -357,6 +414,6 @@ function hideGameMessages() {
   mainDiv.style.display = 'none'
 
   const gameBoard = document.getElementById('container')
-  
+
   gameBoard.style.display = 'block'
 }

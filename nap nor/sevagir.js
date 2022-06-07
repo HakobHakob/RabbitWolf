@@ -1721,3 +1721,30 @@ function wolvesYmin(gamePlaceArr) {
 
 //        return valod;
 //  }
+
+
+
+
+    // if (event.key === 'ArrowLeft') {
+    //   keyDownLeftNew(gamePlaceArr)
+    // } else if (event.key === 'ArrowRight') {
+    //   keyDownRightNew(gamePlaceArr)
+    // } else if (event.key === 'ArrowDown') {
+    //   keyDownDownNew(gamePlaceArr)
+    // } else if (event.key === 'ArrowUp') {
+    //   keyDownUpNew(gamePlaceArr)
+    // }
+
+
+      // if (gamePlaceArr[newX][newY] == FREE_CELL) {
+  //   gamePlaceArr[newX][newY] = RABBIT
+  //   gamePlaceArr[x][y] = FREE_CELL
+  // } else if (gamePlaceArr[newX][newY] === HOME) {
+  //   gamePlaceArr[x][y] = FREE_CELL
+  //   showGameMessages('win')
+  // } else if (gamePlaceArr[newX][newY] === FENCE) {
+  //   return
+  // }
+  // if (gamePlaceArr[newX][newY] === WOLF) {
+  //   showGameMessages('gameOver')
+  // }
