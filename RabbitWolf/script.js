@@ -253,10 +253,9 @@ function calculateDistanceFromRabbit([x1, y1], [[x2, y2]]) {
 function getDistances(emtyCellsAroundWolves, gameStat) {
   const gamePlaceArr = gameStat.matrix
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
-  const cells = []
-
-  emtyCellsAroundWolves.forEach((cell) => {
-    cells.push(calculateDistanceFromRabbit(cell, rabbitCord))
+ 
+  const cells = emtyCellsAroundWolves.map((cord) => {
+    return calculateDistanceFromRabbit(cord, rabbitCord)
   })
   return cells
 }
