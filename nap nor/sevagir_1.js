@@ -92,8 +92,8 @@ function keyDownLeft(gameStat) {
 
   const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
 
-  if (rabbitCord[X][Y] === FREE_CELL) {
-    newCoordData.left[Y] = gamePlaceArr.length - 1
+  if (rabbitCord[X][1] === FREE_CELL) {
+    newCoordData.left[1] = gamePlaceArr.length - 1
   }
   verifyCell(gameStat, rabbitCord, newCoordData.left)
 }
@@ -104,8 +104,8 @@ function keyDownRight(gameStat) {
 
   const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
 
-  if (rabbitCord[X][Y] === gamePlaceArr.length - 1) {
-    newCoordData.right[Y] = FREE_CELL
+  if (rabbitCord[X][1] === gamePlaceArr.length - 1) {
+    newCoordData.right[1] = FREE_CELL
   }
   verifyCell(gameStat, rabbitCord, newCoordData.right)
 }
@@ -116,8 +116,8 @@ function keyDownDown(gameStat) {
 
   const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
 
-  if (rabbitCord[X][X] === gamePlaceArr.length - 1) {
-    newCoordData.down[X] = FREE_CELL
+  if (rabbitCord[X][0] === gamePlaceArr.length - 1) {
+    newCoordData.down[0] = FREE_CELL
   }
   verifyCell(gameStat, rabbitCord, newCoordData.down)
 }
@@ -128,8 +128,8 @@ function keyDownUp(gameStat) {
 
   const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
 
-  if (rabbitCord[X][X] === FREE_CELL) {
-    newCoordData.up[X] = gamePlaceArr.length - 1
+  if (rabbitCord[X][0] === FREE_CELL) {
+    newCoordData.up[0] = gamePlaceArr.length - 1
   }
   verifyCell(gameStat, rabbitCord, newCoordData.up)
 }
