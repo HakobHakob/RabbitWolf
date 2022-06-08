@@ -32,7 +32,7 @@ function start() {
   getRandomPosition(createMass)
 
   Object.values(imgDatas).map((element) => {
-    setCharacters(createMass, element.name, element.count)
+    setCharacters(gameStat.matrix, element.name, element.count)
   })
 
   moveRabbit(gameStat, RABBIT)
