@@ -241,18 +241,25 @@ function calculateDistanceFromRabbit([x1, y1], [[x2, y2]]) {
   return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 }
 
-function getDistances(emtyCells, gamePlaceArr) {
+
+
+function getDistances(emtyCellsAroundWolves, gamePlaceArr) {
+
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
   const cells = []
 
-  emtyCells.forEach((cell) => {
+  emtyCellsAroundWolves.forEach((cell) => {
     cells.push(calculateDistanceFromRabbit(cell, rabbitCord))
   })
   return cells
 }
 
-function shortestDistanceBox(emtyCells, gamePlaceArr) {
-  const distanceArray = getDistances(emtyCells, gamePlaceArr)
+
+
+
+
+function shortestDistanceBox(emtyCellsAroundWolves, gamePlaceArr) {
+  const distanceArray = getDistances(emtyCellsAroundWolves, gamePlaceArr)
   const minOfDistances = Math.min(...distanceArray)
   const index = distanceArray.indexOf(minOfDistances)
 
