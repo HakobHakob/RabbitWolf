@@ -86,7 +86,7 @@ function findCordOfCharacter(gamePlaceArr, character) {
   return gamePlaceArr.reduce(findInGameplace, [])
 }
 
-function keyDownLeftNew(gameStat) {
+function keyDownLeft(gameStat) {
   const gamePlaceArr = gameStat.matrix
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
 
@@ -98,7 +98,7 @@ function keyDownLeftNew(gameStat) {
   verifyCell(gameStat, rabbitCord, newCoordData.left)
 }
 
-function keyDownRightNew(gameStat) {
+function keyDownRight(gameStat) {
   const gamePlaceArr = gameStat.matrix
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
 
@@ -110,7 +110,7 @@ function keyDownRightNew(gameStat) {
   verifyCell(gameStat, rabbitCord, newCoordData.right)
 }
 
-function keyDownDownNew(gameStat) {
+function keyDownDown(gameStat) {
   const gamePlaceArr = gameStat.matrix
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
 
@@ -122,7 +122,7 @@ function keyDownDownNew(gameStat) {
   verifyCell(gameStat, rabbitCord, newCoordData.down)
 }
 
-function keyDownUpNew(gameStat) {
+function keyDownUp(gameStat) {
   const gamePlaceArr = gameStat.matrix
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
 
@@ -168,16 +168,16 @@ function moveRabbit(gameStat) {
     
     switch (event.key) {
       case 'ArrowLeft':
-        keyDownLeftNew(gameStat)
+        keyDownLeft(gameStat)
         break
       case 'ArrowRight':
-        keyDownRightNew(gameStat)
+        keyDownRight(gameStat)
         break
       case 'ArrowDown':
-        keyDownDownNew(gameStat)
+        keyDownDown(gameStat)
         break
       case 'ArrowUp':
-        keyDownUpNew(gameStat)
+        keyDownUp(gameStat)
         break
     }
     wolvesCoordinates(gameStat)
