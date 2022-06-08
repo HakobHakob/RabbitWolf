@@ -1,22 +1,8 @@
 const imgDatas = {
-  rabbit: {
-    name: 'nap',
-    src: 'img/nap.jpg',
-    count: 1,
-  },
-  wolf: {
-    name: 'gel',
-    src: 'img/wolf.jpg',
-  },
-  home: {
-    name: 'home',
-    src: 'img/home.jpg',
-    count: 1,
-  },
-  fence: {
-    name: 'fence',
-    src: 'img/fence.jpg',
-  },
+  rabbit: { name: 'nap', src: 'img/nap.jpg', count: 1 },
+  wolf: { name: 'gel', src: 'img/wolf.jpg' },
+  home: { name: 'home', src: 'img/home.jpg', count: 1 },
+  fence: { name: 'fence', src: 'img/fence.jpg' },
 }
 
 let FREE_CELL = 0
@@ -27,17 +13,22 @@ const FENCE = imgDatas.fence.name
 const X = 0
 const Y = 1
 
+const UP = 0
+const DOWN = 1
+const RIGHT = 2
+const LEFT = 3
+
 function start() {
   clearDivs()
   hideGameMessages()
   const value = selectValue()
   const createMass = createEmptyMass(value)
 
-  
-
-  
-
-  
+  const gameStat = {
+    matrix: createMass,
+    isGameOver: false,
+    gameResult: null,
+  }
 
   imgDatas.wolf.count = Math.ceil((60 * value) / 100)
   imgDatas.fence.count = Math.ceil((40 * value) / 100)
@@ -46,25 +37,15 @@ function start() {
   getRandomPosition(createMass)
 
   Object.values(imgDatas).map((element) => {
-    setCharacters(createMass, element.name, element.count)
-    let characters = element.name
-    
+    setCharacters(gameStat.matrix, element.name, element.count)
   })
 
- 
-
-  
-
-  
-
-  moveRabbit(createMass, RABBIT)
-  createGameArea(createMass, value)
+  moveRabbit(gameStat, RABBIT)
+  createGameArea(gameStat.matrix, value)
 }
 
 function selectValue() {
-  const select = parseInt(document.getElementById('gameSelect').value)
-
-  return select
+  return parseInt(document.getElementById('gameSelect').value)
 }
 
 function createEmptyMass(gameBoardSize) {
@@ -86,14 +67,14 @@ function getRandomPosition(gamePlaceArr) {
   }
 }
 
-function setHeroesAtRandomPosition(gamePlaceArr, gameHero) {
+function setHeroesAtRandomPosition(gamePlaceArr, character) {
   const [x, y] = getRandomPosition(gamePlaceArr)
 
-  gamePlaceArr[x][y] = gameHero
+  gamePlaceArr[x][y] = character
 }
 
-function setCharacters(gamePlaceArr, character, gameHeroCount) {
-  for (let i = 0; i < gameHeroCount; i++) {
+function setCharacters(gamePlaceArr, character, characterCount) {
+  for (let i = 0; i < characterCount; i++) {
     setHeroesAtRandomPosition(gamePlaceArr, character)
   }
 }
@@ -110,53 +91,73 @@ function findCordOfCharacter(gamePlaceArr, character) {
   return gamePlaceArr.reduce(findInGameplace, [])
 }
 
-function keyDownLeftNew(gamePlaceArr) {
-  const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
+function setRabbitInNewCell(gameStat, arrow) {
+  const gamePlaceArr = gameStat.matrix
 
-  const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
-
-  if (rabbitCord[X][Y] === FREE_CELL) {
-    newCoordData.left[Y] = gamePlaceArr.length - 1
-  }
-  verifyCell(gamePlaceArr, rabbitCord, newCoordData.left)
+  const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)[0]
+  const newCoordsData = rabbitCoordinatesForNewCell(rabbitCord)
+  const rabbitNewCoordinates = arrangeNewCoordinates(
+    gamePlaceArr,
+    newCoordsData
+  )
+  setRabbitInNewCoordinates(gameStat, rabbitNewCoordinates, rabbitCord, arrow)
 }
 
-function keyDownRightNew(gamePlaceArr) {
-  const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
-
-  const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
-
-  if (rabbitCord[X][Y] === gamePlaceArr.length - 1) {
-    newCoordData.right[Y] = FREE_CELL
+function moveRabbit(gameStat) {
+  window.onkeydown = (event) => {
+    switch (event.key) {
+      case 'ArrowLeft':
+        setRabbitInNewCell(gameStat, LEFT)
+        break
+      case 'ArrowRight':
+        setRabbitInNewCell(gameStat, RIGHT)
+        break
+      case 'ArrowDown':
+        setRabbitInNewCell(gameStat, DOWN)
+        break
+      case 'ArrowUp':
+        setRabbitInNewCell(gameStat, UP)
+        break
+    }
+    wolvesCoordinates(gameStat)
+    clearDivs()
+    createGameArea(gameStat.matrix)
   }
-  verifyCell(gamePlaceArr, rabbitCord, newCoordData.right)
 }
 
-function keyDownDownNew(gamePlaceArr) {
-  const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
-
-  const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
-
-  if (rabbitCord[X][X] === gamePlaceArr.length - 1) {
-    newCoordData.down[X] = FREE_CELL
-  }
-  verifyCell(gamePlaceArr, rabbitCord, newCoordData.down)
+function rabbitCoordinatesForNewCell([x, y]) {
+  return [
+    [x - 1, y],
+    [x + 1, y],
+    [x, y + 1],
+    [x, y - 1],
+  ]
 }
 
-function keyDownUpNew(gamePlaceArr) {
-  const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
+function arrangeNewCoordinates(gamePlaceArr, newCoordsData) {
+  const newCoordsArr = newCoordsData.map(([x, y]) => {
+    if (x < 0) {
+      x = gamePlaceArr.length - 1
+    }
+    if (x > gamePlaceArr.length - 1) {
+      x = 0
+    }
+    if (y > gamePlaceArr.length - 1) {
+      y = 0
+    }
+    if (y < 0) {
+      y = gamePlaceArr.length - 1
+    }
+    return [x, y]
+  })
 
-  const newCoordData = newXnewYcoordinatesAfterKeyPress(rabbitCord)
-
-  if (rabbitCord[X][X] === FREE_CELL) {
-    newCoordData.up[X] = gamePlaceArr.length - 1
-  }
-  verifyCell(gamePlaceArr, rabbitCord, newCoordData.up)
+  return newCoordsArr
 }
 
-function verifyCell(gamePlaceArr, rabbitCord, rabbitNewCoordinate) {
-  const [x, y] = rabbitCord[X]
-  const [newX, newY] = rabbitNewCoordinate
+function setRabbitInNewCoordinates(gameStat,rabbitNewCoordinates,rabbitCord,arrow) {
+  const gamePlaceArr = gameStat.matrix
+  const [x, y] = rabbitCord
+  const [newX, newY] = rabbitNewCoordinates[arrow]
 
   switch (gamePlaceArr[newX][newY]) {
     case FREE_CELL:
@@ -166,87 +167,40 @@ function verifyCell(gamePlaceArr, rabbitCord, rabbitNewCoordinate) {
 
     case HOME:
       gamePlaceArr[x][y] = FREE_CELL
-      showGameMessages('win')
+      gameStat.isGameOver = true
+      gameStat.gameResult = 'You win!'
+      showGameMessages(gameStat.gameResult)
       break
 
     case FENCE:
       return
 
     case WOLF:
-      showGameMessages('gameOver')
+      gameStat.isGameOver = true
+      gameStat.gameResult = 'Game Over!'
+      showGameMessages(gameStat.gameResult)
       break
   }
+  return [newX, newY]
 }
 
-function moveRabbit(gamePlaceArr) {
-  window.onkeydown = (event) => {
-    switch (event.key) {
-      case 'ArrowLeft':
-        keyDownLeftNew(gamePlaceArr)
-        break
-      case 'ArrowRight':
-        keyDownRightNew(gamePlaceArr)
-        break
-      case 'ArrowDown':
-        keyDownDownNew(gamePlaceArr)
-        break
-      case 'ArrowUp':
-        keyDownUpNew(gamePlaceArr)
-        break
-    }
-    wolvesCoordinates(gamePlaceArr)
-    clearDivs()
-    createGameArea(gamePlaceArr)
-  }
-}
+function wolvesCoordinates(gameStat) {
+  const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
 
-function newXnewYcoordinatesAfterKeyPress(rabbitcoordinates) {
-  const [x, y] = rabbitcoordinates[X]
+  const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((wolf) => {
+    const cells = findCellsArroundWolves(gameStat.matrix, wolf)
 
-  const newCoordinates = {
-    up: [x - 1, y],
-    down: [x + 1, y],
-    right: [x, y + 1],
-    left: [x, y - 1],
-  }
+    const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
 
-  return newCoordinates
-}
+    const shortDistance = shortestDistanceBox(emtyCells, gameStat.matrix)
 
-function wolvesCoordinates(gamePlaceArr) {
-
- 
-
-  
-
-  const wolvesCordAfterStep = findCordOfCharacter(gamePlaceArr, WOLF)
-
-  const gameStat = {
-                 matrix: gamePlaceArr,
-                 isGameOver: false,
-                 gameStatus: null,
-                 character:{
-                  characterRabbit:RABBIT,
-                  characterFence:FENCE,
-                 }
-                 
-                 
-                   }
-
-  const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((element) => {
-
-    const singleWolf = findCellsArroundWolves(gamePlaceArr, element)
-
-    const emtyCells = findEmptyCellsAroundWolf(gameStat, singleWolf)
-    const shortDistance = shortestDistanceBox(emtyCells, gamePlaceArr)
-
-    moveWolves(gamePlaceArr, element, shortDistance)
+    moveWolves(gameStat.matrix, wolf, shortDistance)
   })
 
   return coordinatesAfterRabbitStep
 }
 
-function conditionForCells(gamePlaceArr, [x, y]) {
+function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
   return x >= 0 && x < gamePlaceArr.length && y >= 0 && y < gamePlaceArr.length
 }
 
@@ -258,41 +212,29 @@ function findCellsArroundWolves(gamePlaceArr, [x, y]) {
     [x, y - 1],
   ]
   const allBoxesAroundWolves = review.filter((boxes) =>
-    conditionForCells(gamePlaceArr, boxes)
+    conditionXandYinGamePlace(gamePlaceArr, boxes)
   )
 
   return allBoxesAroundWolves
 }
 
+function cellCharacter(gamePlaceArr, cells, character) {
+  const cellsArray = cells.filter(([x, y]) => gamePlaceArr[x][y] === character)
+  return cellsArray
+}
 
-function findEmptyCellsAroundWolf(gameStat, cordsArray) {
+function findEmptyCellsAroundWolf(gameStat, cords) {
+  const gamePlaceArr = gameStat.matrix
+  const rabbitFound = cellCharacter(gamePlaceArr, cords, RABBIT)
 
-  const [x,y ] = cordsArray
-
-  console.log(gameStat.character)
-
-  
-
-  
-  // const isCharacter = (gameStat.character) => (gameStat.matrix,[x,y]) => gameStat.matrix === gameStat.character
-  // const isRabbit = isCharacter(RABBIT)
-  // const isFree = isCharacter(FREE_CELL)
-
-
-
-  const emptyCellsArray = []
-
-  cordsArray.forEach((wolf) => {
-    const [x, y] = wolf
-    if (gameStat.matrix[x][y] === RABBIT) {
-      showGameMessages('gameOver')
-    }
-    if (gameStat.matrix[x][y] === FREE_CELL) {
-      emptyCellsArray.push(wolf)
-    }
-  })
-
-  return emptyCellsArray
+  if (rabbitFound.length > 0) {
+    gameStat.isGameOver = true
+    gameStat.gameResult = 'Game Over'
+    showGameMessages(gameStat.gameResult)
+  } else {
+    const empty = cellCharacter(gamePlaceArr, cords, FREE_CELL)
+    return empty
+  }
 }
 
 function calculateDistanceFromRabbit([x1, y1], [[x2, y2]]) {
@@ -311,9 +253,7 @@ function getDistances(emtyCells, gamePlaceArr) {
 
 function shortestDistanceBox(emtyCells, gamePlaceArr) {
   const distanceArray = getDistances(emtyCells, gamePlaceArr)
-
   const minOfDistances = Math.min(...distanceArray)
-
   const index = distanceArray.indexOf(minOfDistances)
 
   return emtyCells[index]
@@ -321,7 +261,6 @@ function shortestDistanceBox(emtyCells, gamePlaceArr) {
 
 function moveWolves(gamePlaceArr, wolvesCord, minDistanceData) {
   const [q, k] = wolvesCord
-
   const [a, b] = minDistanceData
 
   gamePlaceArr[a][b] = WOLF
@@ -341,21 +280,17 @@ function gameAreaSize(gameBoardSize) {
 
 function createPlace(boxIndex) {
   const containerNode = document.getElementById('place')
-
   const myDiv = document.createElement('div')
 
   myDiv.setAttribute('id', boxIndex)
-
   containerNode.append(myDiv)
 }
 
 function createCharacterImage(boxIndex, characterImgSrc) {
   const imgDiv = document.getElementById(boxIndex)
-
   const img = document.createElement('img')
 
   img.src = characterImgSrc
-
   imgDiv.append(img)
 }
 
@@ -392,28 +327,19 @@ function createGameArea(gamePlaceArr) {
 
 function showGameMessages(gameStatus) {
   const mainDiv = document.getElementById('showMessage')
-
   const message = document.querySelector('#showMessage > h2')
-
   const gameBoard = document.getElementById('container')
-
   gameBoard.style.display = 'none'
 
-  if (gameStatus === 'gameOver') {
-    message.innerText = 'Game over'
-  } else if (gameStatus === 'win') {
-    message.innerText = 'You win'
+  if (gameStatus) {
+    message.innerText = gameStatus
   }
-
   mainDiv.style.display = 'block'
 }
 
 function hideGameMessages() {
   const mainDiv = document.getElementById('showMessage')
-
   mainDiv.style.display = 'none'
-
   const gameBoard = document.getElementById('container')
-
   gameBoard.style.display = 'block'
 }
