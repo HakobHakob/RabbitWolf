@@ -92,15 +92,19 @@ function findCordOfCharacter(gamePlaceArr, character) {
 }
 
 function setRabbitInNewCell(gameStat, arrow) {
-  const gamePlaceArr = gameStat.matrix
+  if (gameStat.isGameOver === true) {
+    return
+  } else {
+    const gamePlaceArr = gameStat.matrix
 
-  const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)[0]
-  const newCoordsData = rabbitCoordinatesForNewCell(rabbitCord)
-  const rabbitNewCoordinates = arrangeNewCoordinates(
-    gamePlaceArr,
-    newCoordsData
-  )
-  setRabbitInNewCoordinates(gameStat, rabbitNewCoordinates, rabbitCord, arrow)
+    const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)[0]
+    const newCoordsData = rabbitCoordinatesForNewCell(rabbitCord)
+    const rabbitNewCoordinates = arrangeNewCoordinates(
+      gamePlaceArr,
+      newCoordsData
+    )
+    setRabbitInNewCoordinates(gameStat, rabbitNewCoordinates, rabbitCord, arrow)
+  }
 }
 
 function moveRabbit(gameStat) {
@@ -197,19 +201,19 @@ function setRabbitInNewCoordinates(
 function wolvesCoordinates(gameStat) {
   if (gameStat.isGameOver === true) {
     return
-  } else {
+  } else { 
     const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
 
     const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((wolf) => {
       const cells = findCellsArroundWolves(gameStat.matrix, wolf)
-
+  
       const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
-
+  
       const shortDistance = shortestDistanceBox(emtyCells, gameStat)
-
+  
       moveWolves(gameStat, wolf, shortDistance)
     })
-
+  
     return coordinatesAfterRabbitStep
   }
 }
