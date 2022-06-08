@@ -12,10 +12,6 @@ const HOME = imgDatas.home.name
 const FENCE = imgDatas.fence.name
 const X = 0
 const Y = 1
-const LEFT = document.querySelector('#leftBtn').addEventListener('click',keyDownLeftNew)
-const RIGHT = document.querySelector('#rightBtn').addEventListener('click',keyDownRightNew)
-const DOWN =  document.querySelector('#upBtn').addEventListener('click',keyDownUpNew)
-const UP = document.querySelector('#downBtn').addEventListener('click',keyDownDownNew)
 
 function start() {
   clearDivs()
@@ -167,21 +163,34 @@ function verifyCell(gameStat, rabbitCord, rabbitNewCoordinate) {
   }
 }
 
+
+
+
+
 function moveRabbit(gameStat) {
+  window.onclick = (event) => {
+    switch (event.key) {
+      case 'ArrowLeft':
+        keyDownLeftNew(gameStat)
+        break
+      case 'ArrowRight':
+        keyDownRightNew(gameStat)
+        break
+      case 'ArrowDown':
+        keyDownDownNew(gameStat)
+        break
+      case 'ArrowUp':
+        keyDownUpNew(gameStat)
+        break
+    }
 
     wolvesCoordinates(gameStat)
     clearDivs()
     createGameArea(gameStat.matrix)
-}
-
-function left(){
+    
+  }
   
 }
-
-
-
-
-
 
 function newXnewYcoordinatesAfterKeyPress(rabbitcoordinates) {
   const [x, y] = rabbitcoordinates[X]

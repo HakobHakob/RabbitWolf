@@ -203,10 +203,10 @@ function wolvesCoordinates(gameStat) {
   
     const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
 
-  const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((element) => {
-    const singleWolf = findCellsArroundWolves(gameStat.matrix, element)
+  const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((wolf) => {
+    const cells = findCellsArroundWolves(gameStat.matrix, wolf)
 
-    const emtyCells = findEmptyCellsAroundWolf(gameStat, singleWolf)
+    const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
 
     const shortDistance = shortestDistanceBox(emtyCells, gameStat.matrix)
 
