@@ -263,7 +263,7 @@ function shortestDistanceBox(emtyCellsAroundWolves, gamePlaceArr) {
   const minOfDistances = Math.min(...distanceArray)
   const index = distanceArray.indexOf(minOfDistances)
 
-  return emtyCells[index]
+  return emtyCellsAroundWolves[index]
 }
 
 function moveWolves(gamePlaceArr, wolvesCord, minDistanceData) {
