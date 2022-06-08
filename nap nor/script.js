@@ -123,14 +123,10 @@ function moveRabbit(gameStat) {
         setRabbitInNewCell(gameStat, UP)
         break
     }
-
-    if (gameStat.isGameOver === true) {
-      return
-    } else {
       wolvesCoordinates(gameStat)
       clearDivs()
       createGameArea(gameStat.matrix)
-    }
+   
   }
 }
 
