@@ -210,7 +210,7 @@ function wolvesCoordinates(gameStat) {
 
     const shortDistance = shortestDistanceBox(emtyCells, gameStat.matrix)
 
-    moveWolves(gameStat.matrix, element, shortDistance)
+    moveWolves(gameStat.matrix, wolf, shortDistance)
   })
 
   return coordinatesAfterRabbitStep
