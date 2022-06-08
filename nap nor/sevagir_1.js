@@ -36,7 +36,7 @@ function start() {
   })
 
   moveRabbit(gameStat, RABBIT)
-  createGameArea(createMass, value)
+  createGameArea(gameStat.matrix, value)
 }
 
 function selectValue() {
@@ -95,7 +95,7 @@ function keyDownLeft(gameStat) {
   if (rabbitCord[X][1] === FREE_CELL) {
     newCoordData.left[1] = gamePlaceArr.length - 1
   }
-  verifyCell(gameStat, rabbitCord, newCoordData.left)
+  setCellForRabbit(gameStat, rabbitCord, newCoordData.left)
 }
 
 function keyDownRight(gameStat) {
@@ -107,7 +107,7 @@ function keyDownRight(gameStat) {
   if (rabbitCord[X][1] === gamePlaceArr.length - 1) {
     newCoordData.right[1] = FREE_CELL
   }
-  verifyCell(gameStat, rabbitCord, newCoordData.right)
+  setCellForRabbit(gameStat, rabbitCord, newCoordData.right)
 }
 
 function keyDownDown(gameStat) {
@@ -119,7 +119,7 @@ function keyDownDown(gameStat) {
   if (rabbitCord[X][0] === gamePlaceArr.length - 1) {
     newCoordData.down[0] = FREE_CELL
   }
-  verifyCell(gameStat, rabbitCord, newCoordData.down)
+  setCellForRabbit(gameStat, rabbitCord, newCoordData.down)
 }
 
 function keyDownUp(gameStat) {
@@ -131,10 +131,10 @@ function keyDownUp(gameStat) {
   if (rabbitCord[X][0] === FREE_CELL) {
     newCoordData.up[0] = gamePlaceArr.length - 1
   }
-  verifyCell(gameStat, rabbitCord, newCoordData.up)
+  setCellForRabbit(gameStat, rabbitCord, newCoordData.up)
 }
 
-function verifyCell(gameStat, rabbitCord, rabbitNewCoordinate) {
+function setCellForRabbit(gameStat, rabbitCord, rabbitNewCoordinate) {
   const gamePlaceArr = gameStat.matrix
   const [x, y] = rabbitCord[X]
   const [newX, newY] = rabbitNewCoordinate
@@ -218,7 +218,7 @@ function wolvesCoordinates(gameStat) {
   
 }
 
-function conditionForCells(gamePlaceArr, [x, y]) {
+function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
   return x >= 0 && x < gamePlaceArr.length && y >= 0 && y < gamePlaceArr.length
 }
 
@@ -230,7 +230,7 @@ function findCellsArroundWolves(gamePlaceArr, [x, y]) {
     [x, y - 1],
   ]
   const allBoxesAroundWolves = review.filter((boxes) =>
-    conditionForCells(gamePlaceArr, boxes)
+    conditionXandYinGamePlace(gamePlaceArr, boxes)
   )
 
   return allBoxesAroundWolves
