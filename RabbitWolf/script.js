@@ -1,22 +1,25 @@
-const imgDatas = {
+const characterDatas = {
   rabbit: { name: 'nap', src: 'img/nap.jpg', count: 1 },
   wolf: { name: 'gel', src: 'img/wolf.jpg' },
   home: { name: 'home', src: 'img/home.jpg', count: 1 },
   fence: { name: 'fence', src: 'img/fence.jpg' },
 }
 
-let FREE_CELL = 0
-const RABBIT = imgDatas.rabbit.name
-const WOLF = imgDatas.wolf.name
-const HOME = imgDatas.home.name
-const FENCE = imgDatas.fence.name
+const btnsData = {
+  UP:{direction:0, btn:document.getElementById("upBtn")},
+  DOWN:{direction:1, btn:document.getElementById("downBtn")},
+  RIGHT:{direction:2, btn:document.getElementById("rightBtn")},
+  LEFT:{direction:3, btn:document.getElementById("leftBtn")},
+}
+
+
+const RABBIT = characterDatas.rabbit.name
+const WOLF = characterDatas.wolf.name
+const HOME = characterDatas.home.name
+const FENCE = characterDatas.fence.name
+const FREE_CELL = 0
 const X = 0
 const Y = 1
-
-const UP = 0
-const DOWN = 1
-const RIGHT = 2
-const LEFT = 3
 
 function start() {
   clearDivs()
@@ -30,18 +33,17 @@ function start() {
     gameResult: null,
   }
 
-  imgDatas.wolf.count = Math.ceil((60 * value) / 100)
-  imgDatas.fence.count = Math.ceil((40 * value) / 100)
-
   gameAreaSize(value)
   getRandomPosition(createMass)
 
-  Object.values(imgDatas).map((element) => {
+  wolvesAndFenceCounts(value)
+  Object.values(characterDatas).map((element) => {
     setCharacters(gameStat.matrix, element.name, element.count)
   })
 
-  moveRabbit(gameStat, RABBIT)
   createGameArea(gameStat.matrix, value)
+  moveRabbit(gameStat,btnsData)
+  
 }
 
 function selectValue() {
@@ -71,6 +73,11 @@ function setHeroesAtRandomPosition(gamePlaceArr, character) {
   const [x, y] = getRandomPosition(gamePlaceArr)
 
   gamePlaceArr[x][y] = character
+}
+
+function wolvesAndFenceCounts(gameBoardSize){
+  characterDatas.wolf.count = Math.ceil((60 * gameBoardSize) / 100)
+  characterDatas.fence.count = Math.ceil((40 * gameBoardSize) / 100)
 }
 
 function setCharacters(gamePlaceArr, character, characterCount) {
@@ -107,28 +114,32 @@ function setRabbitInNewCell(gameStat, arrow) {
   }
 }
 
-function moveRabbit(gameStat) {
-  window.onkeydown = (event) => {
-    switch (event.key) {
-      case 'ArrowLeft':
-        setRabbitInNewCell(gameStat, LEFT)
-        break
-      case 'ArrowRight':
-        setRabbitInNewCell(gameStat, RIGHT)
-        break
-      case 'ArrowDown':
-        setRabbitInNewCell(gameStat, DOWN)
-        break
-      case 'ArrowUp':
-        setRabbitInNewCell(gameStat, UP)
-        break
-    }
-      wolvesCoordinates(gameStat)
-      clearDivs()
-      createGameArea(gameStat.matrix)
-   
+function eventForRabbitMoveBtn(gameStat,rabbitDirection,rabbitMoveBtn){
+  rabbitMoveBtn.onclick = function(){
+    setRabbitInNewCell(gameStat, rabbitDirection)
+
+    wolvesCoordinates(gameStat)
+    clearDivs()
+    createGameArea(gameStat.matrix) 
   }
+      
 }
+function moveRabbit(gameStat,rabbitMoveBtn) {
+
+  if(gameStat.isGameOver === false){
+    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.LEFT.direction,rabbitMoveBtn.LEFT.btn)
+  }
+  if(gameStat.isGameOver === false){
+    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.RIGHT.direction,rabbitMoveBtn.RIGHT.btn)
+  }
+  if(gameStat.isGameOver === false){
+    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.DOWN.direction,rabbitMoveBtn.DOWN.btn)
+  }
+  if(gameStat.isGameOver === false){
+    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.UP.direction,rabbitMoveBtn.UP.btn)
+  }
+
+  }
 
 function rabbitCoordinatesForNewCell([x, y]) {
   return [
@@ -197,16 +208,15 @@ function setRabbitInNewCoordinates(
 function wolvesCoordinates(gameStat) {
   if (gameStat.isGameOver === true) {
     return
-  } else { 
+  } else {
     const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
     const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((wolf) => {
       const cells = findCellsArroundWolves(gameStat.matrix, wolf)
-      const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)  
+      const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
       const shortDistance = shortestDistanceBox(emtyCells, gameStat)
       moveWolves(gameStat, wolf, shortDistance)
     })
-  
-    return coordinatesAfterRabbitStep
+
   }
 }
 
@@ -253,7 +263,7 @@ function calculateDistanceFromRabbit([x1, y1], [[x2, y2]]) {
 function getDistances(emtyCellsAroundWolves, gameStat) {
   const gamePlaceArr = gameStat.matrix
   const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)
- 
+
   const cells = emtyCellsAroundWolves.map((cord) => {
     return calculateDistanceFromRabbit(cord, rabbitCord)
   })
@@ -317,28 +327,25 @@ function createGameArea(gamePlaceArr) {
   gamePlaceArr.forEach((row, i) => {
     row.forEach((column, j) => {
       const boxIndex = '' + `${i}${j}`
-
-      if (column === FREE_CELL) {
         createPlace(boxIndex)
-      }
 
       if (column === RABBIT) {
-        createPlace(boxIndex)
-        createCharacterImage(boxIndex, imgDatas.rabbit.src)
+
+        createCharacterImage(boxIndex, characterDatas.rabbit.src)
       }
       if (column === HOME) {
-        createPlace(boxIndex)
-        createCharacterImage(boxIndex, imgDatas.home.src)
+
+        createCharacterImage(boxIndex, characterDatas.home.src)
       }
 
       if (column === WOLF) {
-        createPlace(boxIndex)
-        createCharacterImage(boxIndex, imgDatas.wolf.src)
+
+        createCharacterImage(boxIndex, characterDatas.wolf.src)
       }
 
       if (column === FENCE) {
-        createPlace(boxIndex)
-        createCharacterImage(boxIndex, imgDatas.fence.src)
+
+        createCharacterImage(boxIndex, characterDatas.fence.src)
       }
     })
   })
