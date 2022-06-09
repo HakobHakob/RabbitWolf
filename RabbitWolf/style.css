@@ -13,31 +13,12 @@
 
 
 
+
 .selectDiv{
   display: flex;
   justify-content: left;
   align-items: center;
 }
-
-#arrowsDiv{
-  display: inline-block;
-}
-
-#arrowsDiv > button {
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  background-color: pink;
-  cursor: pointer;
-  color: blue;
-}
-
-#arrowsDiv > button:hover{
-  background-color: lightgreen;
-}
-
-
 #startBtn{
   padding: 10px;
   border-radius: 10px;
@@ -51,6 +32,20 @@
 #startBtn:hover{
   background-color:red ;
   
+}
+#createBorad{
+  display: inline-block;
+  width: 150px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: pink;
+  cursor: pointer;
+  color: blue;
+}
+#createBorad:hover{
+  background-color:lightgreen ;
 }
 
 #gameSelect {
@@ -69,6 +64,44 @@
   border: none;
   cursor: pointer;
 }
+
+#arrowsDiv{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 10px auto;
+  padding: 10px;
+}
+.upDiv,.leftNadRight,.downDiv{
+  width: 150px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn{
+  width: 70px;
+  padding: 10px;
+  margin: 3px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: pink;
+  cursor: pointer;
+  color: blue;
+}
+
+.btn:hover{
+  background-color: lightgreen;
+}
+
+.btn span {
+ font-size: 15px;
+}
+
+
+
 
 #place {
   display: flex;
@@ -92,7 +125,7 @@
   width: 400px;
   height: 300px;
   border-radius: 30px;
-  background-color: #f6daff;
+  background-color: bisque;
   position: absolute;
   top: 50%;
   left: 50%;

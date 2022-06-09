@@ -22,8 +22,7 @@ const X = 0
 const Y = 1
 
 function start() {
-  clearDivs()
-  hideGameMessages()
+  
   const value = selectValue()
   const createMass = createEmptyMass(value)
 
@@ -41,6 +40,9 @@ function start() {
     setCharacters(gameStat.matrix, element.name, element.count)
   })
 
+  
+  hideOrShowMesaage()
+  clearDivs()
   createGameArea(gameStat.matrix, value)
   moveRabbit(gameStat,btnsData)
   
@@ -354,7 +356,7 @@ function createGameArea(gamePlaceArr) {
 function showGameMessages(gameStatus) {
   const mainDiv = document.getElementById('showMessage')
   const message = document.querySelector('#showMessage > h2')
-  const gameBoard = document.getElementById('container')
+  const gameBoard = document.getElementById('main')
   gameBoard.style.display = 'none'
 
   if (gameStatus) {
@@ -363,9 +365,9 @@ function showGameMessages(gameStatus) {
   mainDiv.style.display = 'block'
 }
 
-function hideGameMessages() {
+function hideOrShowMesaage() {
   const mainDiv = document.getElementById('showMessage')
   mainDiv.style.display = 'none'
-  const gameBoard = document.getElementById('container')
+  const gameBoard = document.getElementById('main')
   gameBoard.style.display = 'block'
 }
