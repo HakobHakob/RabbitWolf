@@ -9,6 +9,8 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 
@@ -48,7 +50,7 @@
   background-color:lightgreen ;
 }
 
-#gameSelect {
+.gameSelect {
   border-radius: 10px;
   border: none;
   float: right;
@@ -101,7 +103,7 @@
 }
 
 
-#place {
+.place {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -109,7 +111,7 @@
   margin: 0 auto;
   background-color: lightgreen;
 }
-#place > div{
+.place > div{
   width: 60px;
   height: 60px;
   border: 1px solid black;
@@ -117,27 +119,24 @@
 
 }
 
-#showMessage{
+.showMessage{
   display: none;
   text-align: center;
-  width: 400px;
-  height: 300px;
+  width: 300px;
+  height: 200px;
   border-radius: 30px;
   background-color: bisque;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background-image: url("img/nu_pogodi.jpg");
   background-repeat: no-repeat;
+  margin: 20px;
 }
-#showMessage > button{
+.showMessage > button{
   border: 1px solid red;
-  font-size: 30px;
-  width: 150px;
-  padding: 4px;
-  margin: 3px;
-  border-radius: 20px;
+  font-size: 15px;
+  width: 100px;
+  
+  margin: 5px;
+  border-radius: 15px;
   outline: none;
   background-color: bisque;
   cursor: pointer;
@@ -145,6 +144,6 @@
   color: red;
 }
 
-#showMessage > h2{
+.showMessage > h2{
   color: red;
 }

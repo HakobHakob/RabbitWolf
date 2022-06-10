@@ -1,7 +1,3 @@
-
-
-
-
 const characterDatas = {
   rabbit: { name: 'nap', src: 'img/nap.jpg', count: 1 },
   wolf: { name: 'gel', src: 'img/wolf.jpg' },
@@ -17,9 +13,6 @@ const X = 0
 const Y = 1
 let gamePlaceNumber = 1
 
-
-
-
 const newGameBtn = document.querySelector('#createNewGamePLace')
 newGameBtn.onclick = showGameAppearance
 
@@ -28,18 +21,19 @@ function createNewGamePlace(gamePlaceNumber) {
   <div class="main" id="${'main' + gamePlaceNumber}">
     <div class="selectDiv">
       <button id="startBtn" onclick="start(${gamePlaceNumber})">START</button>
-      <select name="select" id="${'gameSelect' + gamePlaceNumber}">
+      <select name="select" id="${
+        'gameSelect' + gamePlaceNumber
+      }" class = "gameSelect">
         <option class="selectOption" value="5">5x5</option>
         <option class="selectOption" value="7">7x7</option>
         <option class="selectOption" value="10">10x10</option>
       </select>
-    </div>
-    <div id="${'place' + gamePlaceNumber}"></div>
-
-    <div id="${'arrowsDiv' + gamePlaceNumber}">
+      <div id="${'arrowsDiv' + gamePlaceNumber}">
 
       <div class="upDiv">
-        <button class="btn" id="${'upBtn' + gamePlaceNumber}"><span>&#8593;</span></button>
+        <button class="btn" id="${
+          'upBtn' + gamePlaceNumber
+        }"><span>&#8593;</span></button>
       </div>
 
       <div class="leftNadRight">
@@ -58,11 +52,15 @@ function createNewGamePlace(gamePlaceNumber) {
       </div>
 
     </div>
+    </div>
+    <div id="${'place' + gamePlaceNumber}" class = "place"></div>
+
+    
 
   </div>
 
-  <div id="${'showMessage' + gamePlaceNumber}">
-    <button onclick="start(${'showMessage' + gamePlaceNumber})">START</button>
+  <div id="${'showMessage' + gamePlaceNumber}" class = "showMessage">
+  <button id="startBtn" onclick="start(${gamePlaceNumber})">START</button>
     <h2></h2>
   </div>`
 
@@ -86,6 +84,7 @@ function appendGamePlaceElements() {
 function start(gamePlaceNumber) {
   const placeNumerSelect = 'gameSelect' + gamePlaceNumber
   const value = parseInt(document.getElementById(placeNumerSelect).value)
+
   const createMass = createEmptyMass(value)
 
   const gameStat = {
@@ -95,13 +94,25 @@ function start(gamePlaceNumber) {
     placeNumber: gamePlaceNumber,
   }
   const btnsData = {
-    UP: { direction: 0, btn: document.getElementById(`${'upBtn' + gameStat.placeNumber}`) },
-    DOWN: { direction: 1, btn: document.getElementById(`${'downBtn' + gameStat.placeNumber}`) },
-    RIGHT: { direction: 2, btn: document.getElementById(`${'rightBtn' + gameStat.placeNumber}`) },
-    LEFT: { direction: 3, btn: document.getElementById(`${'leftBtn' + gameStat.placeNumber}`) },
+    UP: {
+      direction: 0,
+      btn: document.getElementById(`${'upBtn' + gameStat.placeNumber}`),
+    },
+    DOWN: {
+      direction: 1,
+      btn: document.getElementById(`${'downBtn' + gameStat.placeNumber}`),
+    },
+    RIGHT: {
+      direction: 2,
+      btn: document.getElementById(`${'rightBtn' + gameStat.placeNumber}`),
+    },
+    LEFT: {
+      direction: 3,
+      btn: document.getElementById(`${'leftBtn' + gameStat.placeNumber}`),
+    },
   }
-
-  gameAreaSize(value,gameStat)
+  clearDivs(gameStat.placeNumber)
+  gameAreaSize(value, gameStat)
 
   getRandomPosition(createMass)
 
@@ -110,8 +121,8 @@ function start(gamePlaceNumber) {
     setCharacters(gameStat.matrix, element.name, element.count)
   })
 
-  hideOrShowMesaage(gameStat.placeNumber)
-  clearDivs(gameStat.placeNumber)
+  hideOrShowMesaage(gameStat)
+
   createGameArea(gameStat, value)
   moveRabbit(gameStat, btnsData)
 }
@@ -172,10 +183,7 @@ function setRabbitInNewCell(gameStat, arrow) {
 
     const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)[0]
     const newCoordsData = rabbitCoordinatesForNewCell(rabbitCord)
-    const rabbitNewCoordinates = arrangeNewCoordinates(
-      gamePlaceArr,
-      newCoordsData
-    )
+    const rabbitNewCoordinates = arrangeNewCoordinates(gamePlaceArr,newCoordsData)
     setRabbitInNewCoordinates(gameStat, rabbitNewCoordinates, rabbitCord, arrow)
   }
 }
@@ -268,7 +276,7 @@ function setRabbitInNewCoordinates(
     case HOME:
       gamePlaceArr[x][y] = FREE_CELL
       gameStat.isGameOver = true
-      gameStat.gameResult = 'You win!'
+      gameStat.gameResult = 'win'
       showGameMessages(gameStat)
       break
 
@@ -277,7 +285,7 @@ function setRabbitInNewCoordinates(
 
     case WOLF:
       gameStat.isGameOver = true
-      gameStat.gameResult = 'Game Over!'
+      gameStat.gameResult = 'over'
       showGameMessages(gameStat)
       break
   }
@@ -285,18 +293,21 @@ function setRabbitInNewCoordinates(
 }
 
 function wolvesCoordinates(gameStat) {
-  if (gameStat.isGameOver === true) {
-    return
-  } else {
+  
     const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
     const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((wolf) => {
+      if (gameStat.isGameOver === true) {
+        showGameMessages("over")
+        return
+      } else {
       const cells = findCellsArroundWolves(gameStat.matrix, wolf)
       const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
       const shortDistance = shortestDistanceBox(emtyCells, gameStat)
       moveWolves(gameStat, wolf, shortDistance)
+      }
     })
   }
-}
+
 
 function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
   return x >= 0 && x < gamePlaceArr.length && y >= 0 && y < gamePlaceArr.length
@@ -327,8 +338,8 @@ function findEmptyCellsAroundWolf(gameStat, cords) {
 
   if (rabbitFound.length > 0) {
     gameStat.isGameOver = true
-    gameStat.gameResult = 'Game Over'
-    showGameMessages(gameStat)
+    gameStat.gameResult = 'over'
+    showGameMessages("over")
   } else {
     return cellCharacter(gamePlaceArr, cords, FREE_CELL)
   }
@@ -380,10 +391,8 @@ function clearDivs(gamePlaceNumber) {
 }
 
 function gameAreaSize(gameBoardSize, gameStat) {
-  
-  const gamePlace = document.getElementById('place' + gameStat.placeNumber)
-
-  console.log(gamePlace,'kkk')
+  const placeId = 'place' + gameStat.placeNumber
+  const gamePlace = document.getElementById(placeId)
 
   const gamePlaceSize = gameBoardSize * 60 + 20 + 'px'
   gamePlace.style.width = gamePlaceSize
@@ -431,27 +440,35 @@ function createGameArea(gameStat) {
 }
 
 function showGameMessages(gameStat) {
-  const mainDivId = 'showMessage' + gameStat.placeNumber
-  const mainDiv = document.getElementById(mainDivId)
+  const messageDivId = 'showMessage' + gameStat.placeNumber
+  const messageDiv = document.getElementById(messageDivId)
 
-  const messageId = mainDivId + '> h2'
-  const message = document.getElementById(messageId)
+  const messageId = '#' + messageDivId + '>h2'
+  const message = document.querySelector(messageId)
 
   const gameBoard = document.getElementById('main' + gameStat.placeNumber)
 
   gameBoard.style.display = 'none'
 
-  if (gameStat.gameResult === 'Game Over') {
+  if (gameStat.gameResult === 'over') {
     message.innerText = 'Game Over'
-  } else if (gameStat.gameResult === 'You win!') {
+  }
+  if (gameStat.gameResult === 'win') {
     message.innerText = 'You win!'
   }
-  mainDiv.style.display = 'block'
+
+
+
+
+
+  messageDiv.style.display = 'block'
 }
 
-function hideOrShowMesaage(gamePlaceNumber) {
-  const mainDiv = document.getElementById('showMessage' + gamePlaceNumber)
-  mainDiv.style.display = 'none'
-  const gameBoard = document.getElementById('main' + gamePlaceNumber)
+function hideOrShowMesaage(gameStat) {
+  const messageDiv = document.getElementById(
+    'showMessage' + gameStat.placeNumber
+  )
+  messageDiv.style.display = 'none'
+  const gameBoard = document.getElementById('main' + gameStat.placeNumber)
   gameBoard.style.display = 'block'
 }
