@@ -1,18 +1,13 @@
+
+
+
+
 const characterDatas = {
   rabbit: { name: 'nap', src: 'img/nap.jpg', count: 1 },
   wolf: { name: 'gel', src: 'img/wolf.jpg' },
   home: { name: 'home', src: 'img/home.jpg', count: 1 },
   fence: { name: 'fence', src: 'img/fence.jpg' },
 }
-
-const btnsData = {
-  UP:{direction:0, btn:document.getElementById("upBtn")},
-  DOWN:{direction:1, btn:document.getElementById("downBtn")},
-  RIGHT:{direction:2, btn:document.getElementById("rightBtn")},
-  LEFT:{direction:3, btn:document.getElementById("leftBtn")},
-}
-
-
 const RABBIT = characterDatas.rabbit.name
 const WOLF = characterDatas.wolf.name
 const HOME = characterDatas.home.name
@@ -20,36 +15,105 @@ const FENCE = characterDatas.fence.name
 const FREE_CELL = 0
 const X = 0
 const Y = 1
+let gamePlaceNumber = 1
 
-function start() {
-  
-  const value = selectValue()
+
+
+
+const newGameBtn = document.querySelector('#createNewGamePLace')
+newGameBtn.onclick = showGameAppearance
+
+function createNewGamePlace(gamePlaceNumber) {
+  const newGamePlace = `
+  <div class="main" id="${'main' + gamePlaceNumber}">
+    <div class="selectDiv">
+      <button id="startBtn" onclick="start(${gamePlaceNumber})">START</button>
+      <select name="select" id="${'gameSelect' + gamePlaceNumber}">
+        <option class="selectOption" value="5">5x5</option>
+        <option class="selectOption" value="7">7x7</option>
+        <option class="selectOption" value="10">10x10</option>
+      </select>
+    </div>
+    <div id="${'place' + gamePlaceNumber}"></div>
+
+    <div id="${'arrowsDiv' + gamePlaceNumber}">
+
+      <div class="upDiv">
+        <button class="btn" id="${'upBtn' + gamePlaceNumber}"><span>&#8593;</span></button>
+      </div>
+
+      <div class="leftNadRight">
+        <button class="btn" id="${
+          'leftBtn' + gamePlaceNumber
+        }"><span>&#8592;</span></button>
+        <button class="btn" id="${
+          'rightBtn' + gamePlaceNumber
+        }"><span>&#8594;</span></button>
+      </div>
+
+      <div class="downDiv">
+        <button class="btn" id="${
+          'downBtn' + gamePlaceNumber
+        }"><span>&#8595;</span></button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="${'showMessage' + gamePlaceNumber}">
+    <button onclick="start(${'showMessage' + gamePlaceNumber})">START</button>
+    <h2></h2>
+  </div>`
+
+  return newGamePlace
+}
+
+function showGameAppearance() {
+  appendGamePlaceElements()
+}
+
+function appendGamePlaceElements() {
+  gamePlaceNumber++
+  const gameContainer = document.getElementById('container')
+  const gamePlace = createNewGamePlace(gamePlaceNumber)
+  const newWrapper = document.createElement('div')
+  newWrapper.id = 'wrapper-' + gamePlaceNumber
+  newWrapper.innerHTML = gamePlace
+  gameContainer.append(newWrapper)
+}
+
+function start(gamePlaceNumber) {
+  const placeNumerSelect = 'gameSelect' + gamePlaceNumber
+  const value = parseInt(document.getElementById(placeNumerSelect).value)
   const createMass = createEmptyMass(value)
 
   const gameStat = {
     matrix: createMass,
     isGameOver: false,
     gameResult: null,
+    placeNumber: gamePlaceNumber,
+  }
+  const btnsData = {
+    UP: { direction: 0, btn: document.getElementById(`${'upBtn' + gameStat.placeNumber}`) },
+    DOWN: { direction: 1, btn: document.getElementById(`${'downBtn' + gameStat.placeNumber}`) },
+    RIGHT: { direction: 2, btn: document.getElementById(`${'rightBtn' + gameStat.placeNumber}`) },
+    LEFT: { direction: 3, btn: document.getElementById(`${'leftBtn' + gameStat.placeNumber}`) },
   }
 
-  gameAreaSize(value)
+  gameAreaSize(value,gameStat)
+
   getRandomPosition(createMass)
 
-  wolvesAndFenceCounts(value)
+  wolvesAndFenciesCounts(value)
   Object.values(characterDatas).map((element) => {
     setCharacters(gameStat.matrix, element.name, element.count)
   })
 
-  
-  hideOrShowMesaage()
-  clearDivs()
-  createGameArea(gameStat.matrix, value)
-  moveRabbit(gameStat,btnsData)
-  
-}
-
-function selectValue() {
-  return parseInt(document.getElementById('gameSelect').value)
+  hideOrShowMesaage(gameStat.placeNumber)
+  clearDivs(gameStat.placeNumber)
+  createGameArea(gameStat, value)
+  moveRabbit(gameStat, btnsData)
 }
 
 function createEmptyMass(gameBoardSize) {
@@ -61,8 +125,8 @@ function createEmptyMass(gameBoardSize) {
 }
 
 function getRandomPosition(gamePlaceArr) {
-  let x = Math.floor(Math.random() * gamePlaceArr.length)
-  let y = Math.floor(Math.random() * gamePlaceArr.length)
+  const x = Math.floor(Math.random() * gamePlaceArr.length)
+  const y = Math.floor(Math.random() * gamePlaceArr.length)
 
   if (gamePlaceArr[x][y] === FREE_CELL) {
     return [x, y]
@@ -77,7 +141,7 @@ function setHeroesAtRandomPosition(gamePlaceArr, character) {
   gamePlaceArr[x][y] = character
 }
 
-function wolvesAndFenceCounts(gameBoardSize){
+function wolvesAndFenciesCounts(gameBoardSize) {
   characterDatas.wolf.count = Math.ceil((60 * gameBoardSize) / 100)
   characterDatas.fence.count = Math.ceil((40 * gameBoardSize) / 100)
 }
@@ -116,32 +180,45 @@ function setRabbitInNewCell(gameStat, arrow) {
   }
 }
 
-function eventForRabbitMoveBtn(gameStat,rabbitDirection,rabbitMoveBtn){
-  rabbitMoveBtn.onclick = function(){
+function eventForRabbitMoveBtn(gameStat, rabbitDirection, rabbitMoveBtn) {
+  rabbitMoveBtn.onclick = function () {
     setRabbitInNewCell(gameStat, rabbitDirection)
 
     wolvesCoordinates(gameStat)
-    clearDivs()
-    createGameArea(gameStat.matrix) 
+    clearDivs(gameStat.placeNumber)
+    createGameArea(gameStat)
   }
-      
 }
-function moveRabbit(gameStat,rabbitMoveBtn) {
-
-  if(gameStat.isGameOver === false){
-    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.LEFT.direction,rabbitMoveBtn.LEFT.btn)
+function moveRabbit(gameStat, rabbitMoveBtn) {
+  if (gameStat.isGameOver === false) {
+    eventForRabbitMoveBtn(
+      gameStat,
+      rabbitMoveBtn.LEFT.direction,
+      rabbitMoveBtn.LEFT.btn
+    )
   }
-  if(gameStat.isGameOver === false){
-    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.RIGHT.direction,rabbitMoveBtn.RIGHT.btn)
+  if (gameStat.isGameOver === false) {
+    eventForRabbitMoveBtn(
+      gameStat,
+      rabbitMoveBtn.RIGHT.direction,
+      rabbitMoveBtn.RIGHT.btn
+    )
   }
-  if(gameStat.isGameOver === false){
-    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.DOWN.direction,rabbitMoveBtn.DOWN.btn)
+  if (gameStat.isGameOver === false) {
+    eventForRabbitMoveBtn(
+      gameStat,
+      rabbitMoveBtn.DOWN.direction,
+      rabbitMoveBtn.DOWN.btn
+    )
   }
-  if(gameStat.isGameOver === false){
-    eventForRabbitMoveBtn(gameStat,rabbitMoveBtn.UP.direction,rabbitMoveBtn.UP.btn)
+  if (gameStat.isGameOver === false) {
+    eventForRabbitMoveBtn(
+      gameStat,
+      rabbitMoveBtn.UP.direction,
+      rabbitMoveBtn.UP.btn
+    )
   }
-
-  }
+}
 
 function rabbitCoordinatesForNewCell([x, y]) {
   return [
@@ -192,7 +269,7 @@ function setRabbitInNewCoordinates(
       gamePlaceArr[x][y] = FREE_CELL
       gameStat.isGameOver = true
       gameStat.gameResult = 'You win!'
-      showGameMessages(gameStat.gameResult)
+      showGameMessages(gameStat)
       break
 
     case FENCE:
@@ -201,7 +278,7 @@ function setRabbitInNewCoordinates(
     case WOLF:
       gameStat.isGameOver = true
       gameStat.gameResult = 'Game Over!'
-      showGameMessages(gameStat.gameResult)
+      showGameMessages(gameStat)
       break
   }
   return [newX, newY]
@@ -218,7 +295,6 @@ function wolvesCoordinates(gameStat) {
       const shortDistance = shortestDistanceBox(emtyCells, gameStat)
       moveWolves(gameStat, wolf, shortDistance)
     })
-
   }
 }
 
@@ -252,7 +328,7 @@ function findEmptyCellsAroundWolf(gameStat, cords) {
   if (rabbitFound.length > 0) {
     gameStat.isGameOver = true
     gameStat.gameResult = 'Game Over'
-    showGameMessages(gameStat.gameResult)
+    showGameMessages(gameStat)
   } else {
     return cellCharacter(gamePlaceArr, cords, FREE_CELL)
   }
@@ -298,19 +374,23 @@ function moveWolves(gameStat, wolvesCord, minDistanceData) {
   }
 }
 
-function clearDivs() {
-  const place = document.getElementById('place')
+function clearDivs(gamePlaceNumber) {
+  const place = document.getElementById('place' + gamePlaceNumber)
   place.innerHTML = ''
 }
 
-function gameAreaSize(gameBoardSize) {
-  const gamePlace = document.getElementById('place')
+function gameAreaSize(gameBoardSize, gameStat) {
+  
+  const gamePlace = document.getElementById('place' + gameStat.placeNumber)
+
+  console.log(gamePlace,'kkk')
+
   const gamePlaceSize = gameBoardSize * 60 + 20 + 'px'
   gamePlace.style.width = gamePlaceSize
 }
 
-function createPlace(boxIndex) {
-  const containerNode = document.getElementById('place')
+function createPlace(boxIndex, placeNumber) {
+  const containerNode = document.getElementById('place' + placeNumber)
   const myDiv = document.createElement('div')
 
   myDiv.setAttribute('id', boxIndex)
@@ -325,49 +405,53 @@ function createCharacterImage(boxIndex, characterImgSrc) {
   imgDiv.append(img)
 }
 
-function createGameArea(gamePlaceArr) {
+function createGameArea(gameStat) {
+  const gamePlaceArr = gameStat.matrix
   gamePlaceArr.forEach((row, i) => {
     row.forEach((column, j) => {
-      const boxIndex = '' + `${i}${j}`
-        createPlace(boxIndex)
+      const boxIndex = '' + gameStat.placeNumber + `${i}${j}`
+      createPlace(boxIndex, gameStat.placeNumber)
 
       if (column === RABBIT) {
-
         createCharacterImage(boxIndex, characterDatas.rabbit.src)
       }
       if (column === HOME) {
-
         createCharacterImage(boxIndex, characterDatas.home.src)
       }
 
       if (column === WOLF) {
-
         createCharacterImage(boxIndex, characterDatas.wolf.src)
       }
 
       if (column === FENCE) {
-
         createCharacterImage(boxIndex, characterDatas.fence.src)
       }
     })
   })
 }
 
-function showGameMessages(gameStatus) {
-  const mainDiv = document.getElementById('showMessage')
-  const message = document.querySelector('#showMessage > h2')
-  const gameBoard = document.getElementById('main')
+function showGameMessages(gameStat) {
+  const mainDivId = 'showMessage' + gameStat.placeNumber
+  const mainDiv = document.getElementById(mainDivId)
+
+  const messageId = mainDivId + '> h2'
+  const message = document.getElementById(messageId)
+
+  const gameBoard = document.getElementById('main' + gameStat.placeNumber)
+
   gameBoard.style.display = 'none'
 
-  if (gameStatus) {
-    message.innerText = gameStatus
+  if (gameStat.gameResult === 'Game Over') {
+    message.innerText = 'Game Over'
+  } else if (gameStat.gameResult === 'You win!') {
+    message.innerText = 'You win!'
   }
   mainDiv.style.display = 'block'
 }
 
-function hideOrShowMesaage() {
-  const mainDiv = document.getElementById('showMessage')
+function hideOrShowMesaage(gamePlaceNumber) {
+  const mainDiv = document.getElementById('showMessage' + gamePlaceNumber)
   mainDiv.style.display = 'none'
-  const gameBoard = document.getElementById('main')
+  const gameBoard = document.getElementById('main' + gamePlaceNumber)
   gameBoard.style.display = 'block'
 }

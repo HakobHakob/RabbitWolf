@@ -33,7 +33,7 @@
   background-color:red ;
   
 }
-#createBorad{
+#createNewGamePLace{
   display: inline-block;
   width: 150px;
   padding: 10px;
@@ -44,7 +44,7 @@
   cursor: pointer;
   color: blue;
 }
-#createBorad:hover{
+#createNewGamePLace:hover{
   background-color:lightgreen ;
 }
 
@@ -99,8 +99,6 @@
 .btn span {
  font-size: 15px;
 }
-
-
 
 
 #place {
