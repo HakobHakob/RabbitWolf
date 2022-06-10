@@ -180,18 +180,21 @@ function setRabbitInNewCell(gameStat, arrow) {
     return
   } else {
     const gamePlaceArr = gameStat.matrix
-
     const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)[0]
     const newCoordsData = rabbitCoordinatesForNewCell(rabbitCord)
-    const rabbitNewCoordinates = arrangeNewCoordinates(gamePlaceArr,newCoordsData)
+    const rabbitNewCoordinates = arrangeNewCoordinates(
+      gamePlaceArr,
+      newCoordsData
+    )
     setRabbitInNewCoordinates(gameStat, rabbitNewCoordinates, rabbitCord, arrow)
   }
 }
 
 function eventForRabbitMoveBtn(gameStat, rabbitDirection, rabbitMoveBtn) {
+ 
   rabbitMoveBtn.onclick = function () {
+   
     setRabbitInNewCell(gameStat, rabbitDirection)
-
     wolvesCoordinates(gameStat)
     clearDivs(gameStat.placeNumber)
     createGameArea(gameStat)
@@ -275,7 +278,6 @@ function setRabbitInNewCoordinates(
 
     case HOME:
       gamePlaceArr[x][y] = FREE_CELL
-      gameStat.isGameOver = true
       gameStat.gameResult = 'win'
       showGameMessages(gameStat)
       break
@@ -284,7 +286,6 @@ function setRabbitInNewCoordinates(
       return
 
     case WOLF:
-      gameStat.isGameOver = true
       gameStat.gameResult = 'over'
       showGameMessages(gameStat)
       break
@@ -293,20 +294,20 @@ function setRabbitInNewCoordinates(
 }
 
 function wolvesCoordinates(gameStat) {
-  
+  if (gameStat.isGameOver === true) {
+    showGameMessages(gameStat)
+    return
+  } else {
     const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
-    const coordinatesAfterRabbitStep = wolvesCordAfterStep.forEach((wolf) => {
-      if (gameStat.isGameOver === true) {
-        showGameMessages("over")
-        return
-      } else {
+    wolvesCordAfterStep.forEach((wolf) => {
+      
       const cells = findCellsArroundWolves(gameStat.matrix, wolf)
       const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
       const shortDistance = shortestDistanceBox(emtyCells, gameStat)
       moveWolves(gameStat, wolf, shortDistance)
-      }
-    })
-  }
+    
+  })
+  }}
 
 
 function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
@@ -328,8 +329,7 @@ function findCellsArroundWolves(gamePlaceArr, [x, y]) {
 }
 
 function cellCharacter(gamePlaceArr, cells, character) {
-  const cellsArray = cells.filter(([x, y]) => gamePlaceArr[x][y] === character)
-  return cellsArray
+  return cells.filter(([x, y]) => gamePlaceArr[x][y] === character) 
 }
 
 function findEmptyCellsAroundWolf(gameStat, cords) {
@@ -337,9 +337,8 @@ function findEmptyCellsAroundWolf(gameStat, cords) {
   const rabbitFound = cellCharacter(gamePlaceArr, cords, RABBIT)
 
   if (rabbitFound.length > 0) {
-    gameStat.isGameOver = true
     gameStat.gameResult = 'over'
-    showGameMessages("over")
+    showGameMessages(gameStat)
   } else {
     return cellCharacter(gamePlaceArr, cords, FREE_CELL)
   }
@@ -376,7 +375,6 @@ function moveWolves(gameStat, wolvesCord, minDistanceData) {
     return
   } else {
     const gamePlaceArr = gameStat.matrix
-
     const [q, k] = wolvesCord
     const [a, b] = minDistanceData
 
@@ -442,25 +440,20 @@ function createGameArea(gameStat) {
 function showGameMessages(gameStat) {
   const messageDivId = 'showMessage' + gameStat.placeNumber
   const messageDiv = document.getElementById(messageDivId)
-
   const messageId = '#' + messageDivId + '>h2'
   const message = document.querySelector(messageId)
-
   const gameBoard = document.getElementById('main' + gameStat.placeNumber)
 
   gameBoard.style.display = 'none'
 
   if (gameStat.gameResult === 'over') {
+    gameStat.isGameOver = true
     message.innerText = 'Game Over'
   }
   if (gameStat.gameResult === 'win') {
+    gameStat.isGameOver = true
     message.innerText = 'You win!'
   }
-
-
-
-
-
   messageDiv.style.display = 'block'
 }
 
