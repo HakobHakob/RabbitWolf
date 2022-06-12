@@ -21,42 +21,25 @@ function createNewGamePlace(gamePlaceNumber) {
   <div class="main" id="${'main' + gamePlaceNumber}">
     <div class="selectDiv">
       <button id="startBtn" onclick="start(${gamePlaceNumber})">START</button>
-      <select name="select" id="${
-        'gameSelect' + gamePlaceNumber
-      }" class = "gameSelect">
+      <select name="select" id="${'gameSelect' + gamePlaceNumber}" class = "gameSelect">
         <option class="selectOption" value="5">5x5</option>
         <option class="selectOption" value="7">7x7</option>
         <option class="selectOption" value="10">10x10</option>
       </select>
       <div id="${'arrowsDiv' + gamePlaceNumber}">
-
       <div class="upDiv">
-        <button class="btn" id="${
-          'upBtn' + gamePlaceNumber
-        }"><span>&#8593;</span></button>
+        <button class="btn" id="${'upBtn' + gamePlaceNumber}"><span>&#8593;</span></button>
       </div>
-
       <div class="leftNadRight">
-        <button class="btn" id="${
-          'leftBtn' + gamePlaceNumber
-        }"><span>&#8592;</span></button>
-        <button class="btn" id="${
-          'rightBtn' + gamePlaceNumber
-        }"><span>&#8594;</span></button>
+        <button class="btn" id="${'leftBtn' + gamePlaceNumber}"><span>&#8592;</span></button>
+        <button class="btn" id="${'rightBtn' + gamePlaceNumber}"><span>&#8594;</span></button>
       </div>
-
       <div class="downDiv">
-        <button class="btn" id="${
-          'downBtn' + gamePlaceNumber
-        }"><span>&#8595;</span></button>
+        <button class="btn" id="${'downBtn' + gamePlaceNumber}"><span>&#8595;</span></button>
       </div>
-
     </div>
     </div>
     <div id="${'place' + gamePlaceNumber}" class = "place"></div>
-
-    
-
   </div>
 
   <div id="${'showMessage' + gamePlaceNumber}" class = "showMessage">
@@ -94,37 +77,26 @@ function start(gamePlaceNumber) {
     placeNumber: gamePlaceNumber,
   }
   const btnsData = {
-    UP: {
-      direction: 0,
-      btn: document.getElementById(`${'upBtn' + gameStat.placeNumber}`),
-    },
-    DOWN: {
-      direction: 1,
-      btn: document.getElementById(`${'downBtn' + gameStat.placeNumber}`),
-    },
-    RIGHT: {
-      direction: 2,
-      btn: document.getElementById(`${'rightBtn' + gameStat.placeNumber}`),
-    },
-    LEFT: {
-      direction: 3,
-      btn: document.getElementById(`${'leftBtn' + gameStat.placeNumber}`),
-    },
+    UP: {direction: 0,btn: document.getElementById(`${'upBtn' + gameStat.placeNumber}`),},
+    DOWN: {direction: 1,btn: document.getElementById(`${'downBtn' + gameStat.placeNumber}`),},
+    RIGHT: {direction: 2,btn: document.getElementById(`${'rightBtn' + gameStat.placeNumber}`),},
+    LEFT: {direction: 3,btn: document.getElementById(`${'leftBtn' + gameStat.placeNumber}`),},
   }
+  // remove(btnsData)
   clearDivs(gameStat.placeNumber)
   gameAreaSize(value, gameStat)
-
   getRandomPosition(createMass)
 
   wolvesAndFenciesCounts(value)
+
   Object.values(characterDatas).map((element) => {
     setCharacters(gameStat.matrix, element.name, element.count)
   })
 
   hideOrShowMesaage(gameStat)
-
   createGameArea(gameStat, value)
   moveRabbit(gameStat, btnsData)
+  
 }
 
 function createEmptyMass(gameBoardSize) {
@@ -146,9 +118,8 @@ function getRandomPosition(gamePlaceArr) {
   }
 }
 
-function setHeroesAtRandomPosition(gamePlaceArr, character) {
+function setCharacterAtRandomPosition(gamePlaceArr, character) {
   const [x, y] = getRandomPosition(gamePlaceArr)
-
   gamePlaceArr[x][y] = character
 }
 
@@ -159,7 +130,7 @@ function wolvesAndFenciesCounts(gameBoardSize) {
 
 function setCharacters(gamePlaceArr, character, characterCount) {
   for (let i = 0; i < characterCount; i++) {
-    setHeroesAtRandomPosition(gamePlaceArr, character)
+    setCharacterAtRandomPosition(gamePlaceArr, character)
   }
 }
 
@@ -182,24 +153,32 @@ function setRabbitInNewCell(gameStat, arrow) {
     const gamePlaceArr = gameStat.matrix
     const rabbitCord = findCordOfCharacter(gamePlaceArr, RABBIT)[0]
     const newCoordsData = rabbitCoordinatesForNewCell(rabbitCord)
-    const rabbitNewCoordinates = arrangeNewCoordinates(
-      gamePlaceArr,
-      newCoordsData
-    )
+    const rabbitNewCoordinates = arrangeNewCoordinates(gamePlaceArr,newCoordsData)
     setRabbitInNewCoordinates(gameStat, rabbitNewCoordinates, rabbitCord, arrow)
   }
 }
 
-function eventForRabbitMoveBtn(gameStat, rabbitDirection, rabbitMoveBtn) {
- 
+function eventForRabbitMoveBtn(gameStat, rabbitDirection,rabbitMoveBtn) {
+  
   rabbitMoveBtn.onclick = function () {
-   
     setRabbitInNewCell(gameStat, rabbitDirection)
     wolvesCoordinates(gameStat)
     clearDivs(gameStat.placeNumber)
     createGameArea(gameStat)
   }
 }
+
+// function some(btnsData){
+//   console.log(btnsData)
+//   remove(btnsData)
+//   this.addEventListener('click',eventForRabbitMoveBtn)
+// }
+// function remove(btnsData){
+//   btnsData.removeEventListener('click',eventForRabbitMoveBtn)
+// }
+
+
+
 function moveRabbit(gameStat, rabbitMoveBtn) {
   if (gameStat.isGameOver === false) {
     eventForRabbitMoveBtn(
@@ -207,6 +186,8 @@ function moveRabbit(gameStat, rabbitMoveBtn) {
       rabbitMoveBtn.LEFT.direction,
       rabbitMoveBtn.LEFT.btn
     )
+    // remove(rabbitMoveBtn.LEFT.btn)
+    // some(rabbitMoveBtn.LEFT.btn)
   }
   if (gameStat.isGameOver === false) {
     eventForRabbitMoveBtn(
@@ -214,6 +195,8 @@ function moveRabbit(gameStat, rabbitMoveBtn) {
       rabbitMoveBtn.RIGHT.direction,
       rabbitMoveBtn.RIGHT.btn
     )
+    // remove(rabbitMoveBtn.RIGHT.btn)
+    // some(rabbitMoveBtn.RIGHT.btn)
   }
   if (gameStat.isGameOver === false) {
     eventForRabbitMoveBtn(
@@ -221,6 +204,8 @@ function moveRabbit(gameStat, rabbitMoveBtn) {
       rabbitMoveBtn.DOWN.direction,
       rabbitMoveBtn.DOWN.btn
     )
+    // remove(rabbitMoveBtn.DOWN.btn) 
+    // some(rabbitMoveBtn.DOWN.btn) 
   }
   if (gameStat.isGameOver === false) {
     eventForRabbitMoveBtn(
@@ -228,6 +213,8 @@ function moveRabbit(gameStat, rabbitMoveBtn) {
       rabbitMoveBtn.UP.direction,
       rabbitMoveBtn.UP.btn
     )
+    // remove(rabbitMoveBtn.UP.btn)
+    // some(rabbitMoveBtn.UP.btn)
   }
 }
 
@@ -240,32 +227,19 @@ function rabbitCoordinatesForNewCell([x, y]) {
   ]
 }
 
-function arrangeNewCoordinates(gamePlaceArr, newCoordsData) {
-  const newCoordsArr = newCoordsData.map(([x, y]) => {
-    if (x < 0) {
-      x = gamePlaceArr.length - 1
-    }
-    if (x > gamePlaceArr.length - 1) {
-      x = 0
-    }
-    if (y > gamePlaceArr.length - 1) {
-      y = 0
-    }
-    if (y < 0) {
-      y = gamePlaceArr.length - 1
-    }
-    return [x, y]
-  })
-
-  return newCoordsArr
+function rabbitCoordsForCorrect([x, y], gamePlaceArr) {
+  const maxValue = gamePlaceArr.length
+  x = (x + maxValue) % maxValue
+  y = (y + maxValue) % maxValue
+  return [x, y]
 }
 
-function setRabbitInNewCoordinates(
-  gameStat,
-  rabbitNewCoordinates,
-  rabbitCord,
-  arrow
-) {
+function arrangeNewCoordinates(gamePlaceArr, newCoordsData) {
+  return newCoordsData.map(([x, y]) =>
+    rabbitCoordsForCorrect([x, y], gamePlaceArr)
+  )
+}
+function setRabbitInNewCoordinates(gameStat,rabbitNewCoordinates,rabbitCord,arrow) {
   const gamePlaceArr = gameStat.matrix
   const [x, y] = rabbitCord
   const [newX, newY] = rabbitNewCoordinates[arrow]
@@ -300,15 +274,13 @@ function wolvesCoordinates(gameStat) {
   } else {
     const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
     wolvesCordAfterStep.forEach((wolf) => {
-      
       const cells = findCellsArroundWolves(gameStat.matrix, wolf)
       const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
       const shortDistance = shortestDistanceBox(emtyCells, gameStat)
       moveWolves(gameStat, wolf, shortDistance)
-    
-  })
-  }}
-
+    })
+  }
+}
 
 function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
   return x >= 0 && x < gamePlaceArr.length && y >= 0 && y < gamePlaceArr.length
@@ -324,12 +296,11 @@ function findCellsArroundWolves(gamePlaceArr, [x, y]) {
   const allBoxesAroundWolves = review.filter((boxes) =>
     conditionXandYinGamePlace(gamePlaceArr, boxes)
   )
-
   return allBoxesAroundWolves
 }
 
 function cellCharacter(gamePlaceArr, cells, character) {
-  return cells.filter(([x, y]) => gamePlaceArr[x][y] === character) 
+  return cells.filter(([x, y]) => gamePlaceArr[x][y] === character)
 }
 
 function findEmptyCellsAroundWolf(gameStat, cords) {
