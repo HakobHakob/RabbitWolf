@@ -28,14 +28,14 @@ function createNewGamePlace(gamePlaceNumber) {
       </select>
       <div id="${'arrowsDiv' + gamePlaceNumber}">
       <div class="upDiv">
-        <button class="btn" id="${'upBtn' + gamePlaceNumber}"><span>&#8593;</span></button>
+        <button class="up btn" id="${'upBtn' + gamePlaceNumber}"><span>&#8593;</span></button>
       </div>
       <div class="leftNadRight">
-        <button class="btn" id="${'leftBtn' + gamePlaceNumber}"><span>&#8592;</span></button>
-        <button class="btn" id="${'rightBtn' + gamePlaceNumber}"><span>&#8594;</span></button>
+        <button class="left btn" id="${'leftBtn' + gamePlaceNumber}"><span>&#8592;</span></button>
+        <button class="right btn" id="${'rightBtn'+ gamePlaceNumber}"><span>&#8594;</span></button>
       </div>
       <div class="downDiv">
-        <button class="btn" id="${'downBtn' + gamePlaceNumber}"><span>&#8595;</span></button>
+        <button class="down btn" id="${'downBtn' + gamePlaceNumber}"><span>&#8595;</span></button>
       </div>
     </div>
     </div>
@@ -52,7 +52,7 @@ function createNewGamePlace(gamePlaceNumber) {
 
 function showGameAppearance() {
   appendGamePlaceElements()
-}
+} 
 
 function appendGamePlaceElements() {
   gamePlaceNumber++
@@ -67,37 +67,42 @@ function appendGamePlaceElements() {
 function start(gamePlaceNumber) {
   const placeNumerSelect = 'gameSelect' + gamePlaceNumber
   const value = parseInt(document.getElementById(placeNumerSelect).value)
-
   const createMass = createEmptyMass(value)
-
   const gameStat = {
     matrix: createMass,
     isGameOver: false,
     gameResult: null,
     placeNumber: gamePlaceNumber,
   }
-  const btnsData = {
-    UP: {direction: 0,btn: document.getElementById(`${'upBtn' + gameStat.placeNumber}`),},
-    DOWN: {direction: 1,btn: document.getElementById(`${'downBtn' + gameStat.placeNumber}`),},
-    RIGHT: {direction: 2,btn: document.getElementById(`${'rightBtn' + gameStat.placeNumber}`),},
-    LEFT: {direction: 3,btn: document.getElementById(`${'leftBtn' + gameStat.placeNumber}`),},
+
+
+  
+  const btnsData =  {
+    UP: {direction: 0},
+    DOWN: {direction: 1},
+    RIGHT: {direction: 2},
+    LEFT: {direction: 3},
   }
-  // remove(btnsData)
+  
+ 
+
   clearDivs(gameStat.placeNumber)
   gameAreaSize(value, gameStat)
   getRandomPosition(createMass)
-
   wolvesAndFenciesCounts(value)
 
   Object.values(characterDatas).map((element) => {
     setCharacters(gameStat.matrix, element.name, element.count)
   })
-
+  removeBtnsEventListeners(gameStat)
   hideOrShowMesaage(gameStat)
   createGameArea(gameStat, value)
-  moveRabbit(gameStat, btnsData)
-  
+
+ 
+  moveRabbit(gameStat, btnsData) 
 }
+
+
 
 function createEmptyMass(gameBoardSize) {
   const gameBoard = new Array(gameBoardSize)
@@ -158,64 +163,49 @@ function setRabbitInNewCell(gameStat, arrow) {
   }
 }
 
-function eventForRabbitMoveBtn(gameStat, rabbitDirection,rabbitMoveBtn) {
-  
-  rabbitMoveBtn.onclick = function () {
-    setRabbitInNewCell(gameStat, rabbitDirection)
-    wolvesCoordinates(gameStat)
-    clearDivs(gameStat.placeNumber)
-    createGameArea(gameStat)
-  }
+
+function removeListeners(element) { 
+  const newBtnElement = element.cloneNode(true)
+  element.parentNode.replaceChild(newBtnElement, element)
+ }
+
+ function getBtnElements(gameStat,btnId){ 
+   return document.getElementById(btnId + gameStat.placeNumber) 
+ }
+
+ function removeBtnsEventListeners(gameStat) {
+  removeListeners(getBtnElements(gameStat, "upBtn"))
+  removeListeners(getBtnElements(gameStat, "downBtn"))
+  removeListeners(getBtnElements(gameStat, "rightBtn"))
+  removeListeners(getBtnElements(gameStat, "leftBtn"))
 }
 
-// function some(btnsData){
-//   console.log(btnsData)
-//   remove(btnsData)
-//   this.addEventListener('click',eventForRabbitMoveBtn)
-// }
-// function remove(btnsData){
-//   btnsData.removeEventListener('click',eventForRabbitMoveBtn)
-// }
-
-
-
 function moveRabbit(gameStat, rabbitMoveBtn) {
-  if (gameStat.isGameOver === false) {
-    eventForRabbitMoveBtn(
-      gameStat,
-      rabbitMoveBtn.LEFT.direction,
-      rabbitMoveBtn.LEFT.btn
-    )
-    // remove(rabbitMoveBtn.LEFT.btn)
-    // some(rabbitMoveBtn.LEFT.btn)
-  }
-  if (gameStat.isGameOver === false) {
-    eventForRabbitMoveBtn(
-      gameStat,
-      rabbitMoveBtn.RIGHT.direction,
-      rabbitMoveBtn.RIGHT.btn
-    )
-    // remove(rabbitMoveBtn.RIGHT.btn)
-    // some(rabbitMoveBtn.RIGHT.btn)
-  }
-  if (gameStat.isGameOver === false) {
-    eventForRabbitMoveBtn(
-      gameStat,
-      rabbitMoveBtn.DOWN.direction,
-      rabbitMoveBtn.DOWN.btn
-    )
-    // remove(rabbitMoveBtn.DOWN.btn) 
-    // some(rabbitMoveBtn.DOWN.btn) 
-  }
-  if (gameStat.isGameOver === false) {
-    eventForRabbitMoveBtn(
-      gameStat,
-      rabbitMoveBtn.UP.direction,
-      rabbitMoveBtn.UP.btn
-    )
-    // remove(rabbitMoveBtn.UP.btn)
-    // some(rabbitMoveBtn.UP.btn)
-  }
+
+    const moveLeft = getBtnElements(gameStat, "leftBtn")
+    moveLeft.addEventListener('click',function(){
+      addEventsForRabbitMoveBtn(gameStat,rabbitMoveBtn.LEFT.direction) 
+    })
+    const moveRight = getBtnElements(gameStat, "rightBtn")
+    moveRight.addEventListener('click',function(){
+      addEventsForRabbitMoveBtn(gameStat,rabbitMoveBtn.RIGHT.direction)   
+    })
+    const moveDown = getBtnElements(gameStat, "downBtn")
+    moveDown.addEventListener('click',function(){
+      addEventsForRabbitMoveBtn( gameStat,rabbitMoveBtn.DOWN.direction)  
+    })
+    const moveUp = getBtnElements(gameStat, "upBtn")
+    moveUp.addEventListener('click',function(){
+      addEventsForRabbitMoveBtn(gameStat,rabbitMoveBtn.UP.direction)  
+    })    
+}
+
+function addEventsForRabbitMoveBtn(gameStat, rabbitDirection) {      
+  setRabbitInNewCell(gameStat, rabbitDirection)
+  wolvesCoordinates(gameStat)
+  clearDivs(gameStat.placeNumber)
+  createGameArea(gameStat)      
+
 }
 
 function rabbitCoordinatesForNewCell([x, y]) {
