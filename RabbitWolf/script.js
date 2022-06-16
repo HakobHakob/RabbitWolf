@@ -1,8 +1,14 @@
 const characterDatas = {
-  rabbit: { name: 'nap', src: 'img/nap.jpg', count: 1 },
-  wolf: { name: 'gel', src: 'img/wolf.jpg' },
-  home: { name: 'home', src: 'img/home.jpg', count: 1 },
-  fence: { name: 'fence', src: 'img/fence.jpg' },
+  rabbit: { name: 'nap', src: 'img/nap.png', count: 1 },
+  wolf: { name: 'gel', src: 'img/wolf.png' },
+  home: { name: 'home', src: 'img/home.png', count: 1 },
+  fence: { name: 'fence', src: 'img/fence.png' },
+}
+const btnsData =  {
+  UP: {direction: 0},
+  DOWN: {direction: 1},
+  RIGHT: {direction: 2},
+  LEFT: {direction: 3},
 }
 const RABBIT = characterDatas.rabbit.name
 const WOLF = characterDatas.wolf.name
@@ -12,6 +18,7 @@ const FREE_CELL = 0
 const X = 0
 const Y = 1
 let gamePlaceNumber = 1
+let INTERVALS_ARRAY = []
 
 const newGameBtn = document.querySelector('#createNewGamePLace')
 newGameBtn.onclick = showGameAppearance
@@ -64,27 +71,25 @@ function appendGamePlaceElements() {
   gameContainer.append(newWrapper)
 }
 
+
 function start(gamePlaceNumber) {
+
   const placeNumerSelect = 'gameSelect' + gamePlaceNumber
   const value = parseInt(document.getElementById(placeNumerSelect).value)
   const createMass = createEmptyMass(value)
+  
   const gameStat = {
     matrix: createMass,
     isGameOver: false,
     gameResult: null,
     placeNumber: gamePlaceNumber,
+    wolvesIntervalStatus:false,
+    intervalId:INTERVALS_ARRAY,
   }
-
-
+  clearIntervals(gameStat)
+  setIntervalForWolvesMove(gameStat)
   
-  const btnsData =  {
-    UP: {direction: 0},
-    DOWN: {direction: 1},
-    RIGHT: {direction: 2},
-    LEFT: {direction: 3},
-  }
-  
- 
+
 
   clearDivs(gameStat.placeNumber)
   gameAreaSize(value, gameStat)
@@ -96,13 +101,13 @@ function start(gamePlaceNumber) {
   })
   removeBtnsEventListeners(gameStat)
   hideOrShowMesaage(gameStat)
-  createGameArea(gameStat, value)
+  createGameArea(gameStat, value) 
 
- 
+
+
+  
   moveRabbit(gameStat, btnsData) 
 }
-
-
 
 function createEmptyMass(gameBoardSize) {
   const gameBoard = new Array(gameBoardSize)
@@ -163,7 +168,6 @@ function setRabbitInNewCell(gameStat, arrow) {
   }
 }
 
-
 function removeListeners(element) { 
   const newBtnElement = element.cloneNode(true)
   element.parentNode.replaceChild(newBtnElement, element)
@@ -202,10 +206,9 @@ function moveRabbit(gameStat, rabbitMoveBtn) {
 
 function addEventsForRabbitMoveBtn(gameStat, rabbitDirection) {      
   setRabbitInNewCell(gameStat, rabbitDirection)
-  wolvesCoordinates(gameStat)
+  // getWolvesCoordinatesAndMove(gameStat)
   clearDivs(gameStat.placeNumber)
-  createGameArea(gameStat)      
-
+  createGameArea(gameStat)  
 }
 
 function rabbitCoordinatesForNewCell([x, y]) {
@@ -243,6 +246,7 @@ function setRabbitInNewCoordinates(gameStat,rabbitNewCoordinates,rabbitCord,arro
     case HOME:
       gamePlaceArr[x][y] = FREE_CELL
       gameStat.gameResult = 'win'
+      clearIntervals(gameStat)
       showGameMessages(gameStat)
       break
 
@@ -251,25 +255,57 @@ function setRabbitInNewCoordinates(gameStat,rabbitNewCoordinates,rabbitCord,arro
 
     case WOLF:
       gameStat.gameResult = 'over'
+      clearIntervals(gameStat)
       showGameMessages(gameStat)
       break
   }
   return [newX, newY]
 }
 
-function wolvesCoordinates(gameStat) {
+function getWolvesCoordinatesAndMove(gameStat) {
   if (gameStat.isGameOver === true) {
     showGameMessages(gameStat)
     return
   } else {
-    const wolvesCordAfterStep = findCordOfCharacter(gameStat.matrix, WOLF)
-    wolvesCordAfterStep.forEach((wolf) => {
-      const cells = findCellsArroundWolves(gameStat.matrix, wolf)
-      const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
-      const shortDistance = shortestDistanceBox(emtyCells, gameStat)
-      moveWolves(gameStat, wolf, shortDistance)
+    const wolvesCordAfterRabbitStep = findCordOfCharacter(gameStat.matrix, WOLF)
+    wolvesCordAfterRabbitStep.forEach((wolf) => {
+
+        const cells = findCellsArroundWolves(gameStat.matrix, wolf)
+        const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
+        const shortDistance = shortestDistanceBox(emtyCells, gameStat)
+        moveWolves(gameStat, wolf, shortDistance)     
+      
     })
   }
+}
+// const delayForChangeBackground = (Math.random()*50 + 1500)
+ // setInterval(()=>changeWolvesCellBackground(gameStat), delayForChangeBackground)
+
+
+function setIntervalForWolvesMove(gameStat){
+  const intervalsArr = gameStat.intervalId
+  const gamePlaceNumber = gameStat.placeNumber
+  const delayForMoveWolf = (Math.random() * 50 + 2000) 
+
+    const intervalId = setInterval(() => {
+      getWolvesCoordinatesAndMove(gameStat)      
+      clearDivs(gamePlaceNumber)
+      createGameArea(gameStat)
+
+    }, delayForMoveWolf)
+    
+    intervalsArr.push(intervalId) 
+    // return  intervalId        
+}
+
+function clearIntervals(gameStat){
+  const intervalIds = gameStat.intervalId 
+  intervalIds.forEach((intervalId) =>{
+      
+      clearInterval(intervalId)
+        
+      }) 
+      console.log(intervalIds)  
 }
 
 function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
@@ -298,7 +334,9 @@ function findEmptyCellsAroundWolf(gameStat, cords) {
   const rabbitFound = cellCharacter(gamePlaceArr, cords, RABBIT)
 
   if (rabbitFound.length > 0) {
+    gameStat.wolvesIntervalStatus = true
     gameStat.gameResult = 'over'
+    clearIntervals(gameStat)
     showGameMessages(gameStat)
   } else {
     return cellCharacter(gamePlaceArr, cords, FREE_CELL)
@@ -368,12 +406,17 @@ function createPlace(boxIndex, placeNumber) {
 function createCharacterImage(boxIndex, characterImgSrc) {
   const imgDiv = document.getElementById(boxIndex)
   const img = document.createElement('img')
-
   img.src = characterImgSrc
   imgDiv.append(img)
 }
 
+function changeWolvesCellBackground(boxIndex,color){
+  const imgDiv = document.getElementById(boxIndex)
+  imgDiv.style.backgroundColor = color
+}
+
 function createGameArea(gameStat) {
+  
   const gamePlaceArr = gameStat.matrix
   gamePlaceArr.forEach((row, i) => {
     row.forEach((column, j) => {
@@ -389,6 +432,7 @@ function createGameArea(gameStat) {
 
       if (column === WOLF) {
         createCharacterImage(boxIndex, characterDatas.wolf.src)
+        // changeWolvesCellBackground(boxIndex,"red")
       }
 
       if (column === FENCE) {
