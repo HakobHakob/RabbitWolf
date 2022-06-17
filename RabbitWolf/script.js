@@ -17,41 +17,40 @@ const FENCE = characterDatas.fence.name
 const FREE_CELL = 0
 const X = 0
 const Y = 1
-let gamePlaceNumber = 1
+let GAME_PLACE_NUMBER = 1
 const GAME_OBJECTS = {}
-
 
 const newGameBtn = document.querySelector('#createNewGamePLace')
 newGameBtn.onclick = showGameAppearance
 
-function createNewGamePlace(gamePlaceNumber) {
+function createNewGamePlace(GAME_PLACE_NUMBER) {
   const newGamePlace = `
-  <div class="main" id="${'main' + gamePlaceNumber}">
+  <div class="main" id="${'main' + GAME_PLACE_NUMBER}">
     <div class="selectDiv">
-      <button id="startBtn" onclick="start(${gamePlaceNumber})">START</button>
-      <select name="select" id="${'gameSelect' + gamePlaceNumber}" class = "gameSelect">
+      <button id="startBtn" onclick="start(${GAME_PLACE_NUMBER})">START</button>
+      <select name="select" id="${'gameSelect' + GAME_PLACE_NUMBER}" class = "gameSelect">
         <option class="selectOption" value="5">5x5</option>
         <option class="selectOption" value="7">7x7</option>
         <option class="selectOption" value="10">10x10</option>
       </select>
-      <div id="${'arrowsDiv' + gamePlaceNumber}">
+      <div id="${'arrowsDiv' + GAME_PLACE_NUMBER}">
       <div class="upDiv">
-        <button class="up btn" id="${'upBtn' + gamePlaceNumber}"><span>&#8593;</span></button>
+        <button class="up btn" id="${'upBtn' + GAME_PLACE_NUMBER}"><span>&#8593;</span></button>
       </div>
       <div class="leftNadRight">
-        <button class="left btn" id="${'leftBtn' + gamePlaceNumber}"><span>&#8592;</span></button>
-        <button class="right btn" id="${'rightBtn'+ gamePlaceNumber}"><span>&#8594;</span></button>
+        <button class="left btn" id="${'leftBtn' + GAME_PLACE_NUMBER}"><span>&#8592;</span></button>
+        <button class="right btn" id="${'rightBtn'+ GAME_PLACE_NUMBER}"><span>&#8594;</span></button>
       </div>
       <div class="downDiv">
-        <button class="down btn" id="${'downBtn' + gamePlaceNumber}"><span>&#8595;</span></button>
+        <button class="down btn" id="${'downBtn' + GAME_PLACE_NUMBER}"><span>&#8595;</span></button>
       </div>
     </div>
     </div>
-    <div id="${'place' + gamePlaceNumber}" class = "place"></div>
+    <div id="${'place' + GAME_PLACE_NUMBER}" class = "place"></div>
   </div>
 
-  <div id="${'showMessage' + gamePlaceNumber}" class = "showMessage">
-  <button id="startBtn" onclick="start(${gamePlaceNumber})">START</button>
+  <div id="${'showMessage' + GAME_PLACE_NUMBER}" class = "showMessage">
+  <button id="startBtn" onclick="start(${GAME_PLACE_NUMBER})">START</button>
     <h2></h2>
   </div>`
 
@@ -63,43 +62,39 @@ function showGameAppearance() {
 } 
 
 function appendGamePlaceElements() {
-  gamePlaceNumber++
+  GAME_PLACE_NUMBER++
   const gameContainer = document.getElementById('container')
-  const gamePlace = createNewGamePlace(gamePlaceNumber)
+  const gamePlace = createNewGamePlace(GAME_PLACE_NUMBER)
   const newWrapper = document.createElement('div')
-  newWrapper.id = 'wrapper-' + gamePlaceNumber
+  newWrapper.id = 'wrapper-' + GAME_PLACE_NUMBER
   newWrapper.innerHTML = gamePlace
   gameContainer.append(newWrapper)
 }
 
 
-function start(gamePlaceNumber) {
+function start(GAME_PLACE_NUMBER) {
  
-if(GAME_OBJECTS[gamePlaceNumber]){
-clearInterval(GAME_OBJECTS[gamePlaceNumber].intervalId)
+if(GAME_OBJECTS[GAME_PLACE_NUMBER]){
+    clearInterval(GAME_OBJECTS[GAME_PLACE_NUMBER].intervalId)
 }
-
-
-  const placeNumerSelect = 'gameSelect' + gamePlaceNumber
+  const placeNumerSelect = 'gameSelect' + GAME_PLACE_NUMBER
   const value = parseInt(document.getElementById(placeNumerSelect).value)
-  const createMass = createEmptyMass(value)
-  
+  const createMass = createEmptyMass(value)  
  
   const gameStat = {
     matrix: createMass,
     isGameOver: false,
     gameResult: null,
-    placeNumber: gamePlaceNumber,
+    placeNumber: GAME_PLACE_NUMBER,
     wolvesIntervalStatus:false,
     intervalId: setInterval(() => {
       getWolvesCoordinatesAndMove(gameStat)      
-      clearDivs(gamePlaceNumber)
+      clearDivs(GAME_PLACE_NUMBER)
       createGameArea(gameStat)
 
     }, 2000),
   }
-
-  GAME_OBJECTS[gamePlaceNumber] = gameStat
+  GAME_OBJECTS[GAME_PLACE_NUMBER] = gameStat
 
   clearDivs(gameStat.placeNumber)
   gameAreaSize(value, gameStat)
@@ -272,6 +267,8 @@ function getWolvesCoordinatesAndMove(gameStat) {
     return
   } else {
     const wolvesCordAfterRabbitStep = findCordOfCharacter(gameStat.matrix, WOLF)
+
+    console.log(wolvesCordAfterRabbitStep)
     
     wolvesCordAfterRabbitStep.forEach((wolf) => {
 
@@ -363,8 +360,8 @@ function moveWolves(gameStat, wolvesCord, minDistanceData) {
   }
 }
 
-function clearDivs(gamePlaceNumber) {
-  const place = document.getElementById('place' + gamePlaceNumber)
+function clearDivs(GAME_PLACE_NUMBER) {
+  const place = document.getElementById('place' + GAME_PLACE_NUMBER)
   place.innerHTML = ''
 }
 
