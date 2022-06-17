@@ -18,7 +18,8 @@ const FREE_CELL = 0
 const X = 0
 const Y = 1
 let gamePlaceNumber = 1
-let INTERVALS_ARRAY = []
+const GAME_OBJECTS = {}
+
 
 const newGameBtn = document.querySelector('#createNewGamePLace')
 newGameBtn.onclick = showGameAppearance
@@ -73,23 +74,32 @@ function appendGamePlaceElements() {
 
 
 function start(gamePlaceNumber) {
+ 
+if(GAME_OBJECTS[gamePlaceNumber]){
+clearInterval(GAME_OBJECTS[gamePlaceNumber].intervalId)
+}
+
 
   const placeNumerSelect = 'gameSelect' + gamePlaceNumber
   const value = parseInt(document.getElementById(placeNumerSelect).value)
   const createMass = createEmptyMass(value)
   
+ 
   const gameStat = {
     matrix: createMass,
     isGameOver: false,
     gameResult: null,
     placeNumber: gamePlaceNumber,
     wolvesIntervalStatus:false,
-    intervalId:INTERVALS_ARRAY,
-  }
-  clearIntervals(gameStat)
-  setIntervalForWolvesMove(gameStat)
-  
+    intervalId: setInterval(() => {
+      getWolvesCoordinatesAndMove(gameStat)      
+      clearDivs(gamePlaceNumber)
+      createGameArea(gameStat)
 
+    }, 2000),
+  }
+
+  GAME_OBJECTS[gamePlaceNumber] = gameStat
 
   clearDivs(gameStat.placeNumber)
   gameAreaSize(value, gameStat)
@@ -101,11 +111,7 @@ function start(gamePlaceNumber) {
   })
   removeBtnsEventListeners(gameStat)
   hideOrShowMesaage(gameStat)
-  createGameArea(gameStat, value) 
-
-
-
-  
+  createGameArea(gameStat, value)   
   moveRabbit(gameStat, btnsData) 
 }
 
@@ -246,7 +252,6 @@ function setRabbitInNewCoordinates(gameStat,rabbitNewCoordinates,rabbitCord,arro
     case HOME:
       gamePlaceArr[x][y] = FREE_CELL
       gameStat.gameResult = 'win'
-      clearIntervals(gameStat)
       showGameMessages(gameStat)
       break
 
@@ -255,7 +260,6 @@ function setRabbitInNewCoordinates(gameStat,rabbitNewCoordinates,rabbitCord,arro
 
     case WOLF:
       gameStat.gameResult = 'over'
-      clearIntervals(gameStat)
       showGameMessages(gameStat)
       break
   }
@@ -268,11 +272,13 @@ function getWolvesCoordinatesAndMove(gameStat) {
     return
   } else {
     const wolvesCordAfterRabbitStep = findCordOfCharacter(gameStat.matrix, WOLF)
+    
     wolvesCordAfterRabbitStep.forEach((wolf) => {
 
         const cells = findCellsArroundWolves(gameStat.matrix, wolf)
         const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
         const shortDistance = shortestDistanceBox(emtyCells, gameStat)
+
         moveWolves(gameStat, wolf, shortDistance)     
       
     })
@@ -282,31 +288,7 @@ function getWolvesCoordinatesAndMove(gameStat) {
  // setInterval(()=>changeWolvesCellBackground(gameStat), delayForChangeBackground)
 
 
-function setIntervalForWolvesMove(gameStat){
-  const intervalsArr = gameStat.intervalId
-  const gamePlaceNumber = gameStat.placeNumber
-  const delayForMoveWolf = (Math.random() * 50 + 2000) 
 
-    const intervalId = setInterval(() => {
-      getWolvesCoordinatesAndMove(gameStat)      
-      clearDivs(gamePlaceNumber)
-      createGameArea(gameStat)
-
-    }, delayForMoveWolf)
-    
-    intervalsArr.push(intervalId) 
-    // return  intervalId        
-}
-
-function clearIntervals(gameStat){
-  const intervalIds = gameStat.intervalId 
-  intervalIds.forEach((intervalId) =>{
-      
-      clearInterval(intervalId)
-        
-      }) 
-      console.log(intervalIds)  
-}
 
 function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
   return x >= 0 && x < gamePlaceArr.length && y >= 0 && y < gamePlaceArr.length
@@ -336,7 +318,6 @@ function findEmptyCellsAroundWolf(gameStat, cords) {
   if (rabbitFound.length > 0) {
     gameStat.wolvesIntervalStatus = true
     gameStat.gameResult = 'over'
-    clearIntervals(gameStat)
     showGameMessages(gameStat)
   } else {
     return cellCharacter(gamePlaceArr, cords, FREE_CELL)
