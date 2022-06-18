@@ -71,7 +71,6 @@ function appendGamePlaceElements() {
   gameContainer.append(newWrapper)
 }
 
-
 function start(GAME_PLACE_NUMBER) {
  
 if(GAME_OBJECTS[GAME_PLACE_NUMBER]){
@@ -107,7 +106,7 @@ if(GAME_OBJECTS[GAME_PLACE_NUMBER]){
   removeBtnsEventListeners(gameStat)
   hideOrShowMesaage(gameStat)
   createGameArea(gameStat, value)   
-  moveRabbit(gameStat, btnsData) 
+  moveRabbit(gameStat, btnsData)
 }
 
 function createEmptyMass(gameBoardSize) {
@@ -146,15 +145,16 @@ function setCharacters(gamePlaceArr, character, characterCount) {
 }
 
 function findCordOfCharacter(gamePlaceArr, character) {
+  
   const findInGameplace = function (accumulator, row, x) {
     row.forEach((element, y) => {
       if (element === character) {
         accumulator.push([x, y])
       }
-    })
+    })   
     return accumulator
   }
-  return gamePlaceArr.reduce(findInGameplace, [])
+  return gamePlaceArr.reduce(findInGameplace, [])  
 }
 
 function setRabbitInNewCell(gameStat, arrow) {
@@ -207,7 +207,6 @@ function moveRabbit(gameStat, rabbitMoveBtn) {
 
 function addEventsForRabbitMoveBtn(gameStat, rabbitDirection) {      
   setRabbitInNewCell(gameStat, rabbitDirection)
-  // getWolvesCoordinatesAndMove(gameStat)
   clearDivs(gameStat.placeNumber)
   createGameArea(gameStat)  
 }
@@ -266,26 +265,15 @@ function getWolvesCoordinatesAndMove(gameStat) {
     showGameMessages(gameStat)
     return
   } else {
-    const wolvesCordAfterRabbitStep = findCordOfCharacter(gameStat.matrix, WOLF)
-
-    console.log(wolvesCordAfterRabbitStep)
-    
-    wolvesCordAfterRabbitStep.forEach((wolf) => {
-
+    const wolvesCoordinates = findCordOfCharacter(gameStat.matrix, WOLF)
+    wolvesCoordinates.forEach((wolf) => {
         const cells = findCellsArroundWolves(gameStat.matrix, wolf)
         const emtyCells = findEmptyCellsAroundWolf(gameStat, cells)
         const shortDistance = shortestDistanceBox(emtyCells, gameStat)
-
-        moveWolves(gameStat, wolf, shortDistance)     
-      
+       moveWolves(gameStat, wolf, shortDistance)      
     })
   }
 }
-// const delayForChangeBackground = (Math.random()*50 + 1500)
- // setInterval(()=>changeWolvesCellBackground(gameStat), delayForChangeBackground)
-
-
-
 
 function conditionXandYinGamePlace(gamePlaceArr, [x, y]) {
   return x >= 0 && x < gamePlaceArr.length && y >= 0 && y < gamePlaceArr.length
