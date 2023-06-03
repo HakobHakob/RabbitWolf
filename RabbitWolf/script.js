@@ -53,7 +53,6 @@ function createNewGamePlace(GAME_PLACE_NUMBER) {
   <button id="startBtn" onclick="start(${GAME_PLACE_NUMBER})">START</button>
     <h2></h2>
   </div>`
-
   return newGamePlace
 }
 
@@ -90,7 +89,6 @@ if(GAME_OBJECTS[GAME_PLACE_NUMBER]){
       getWolvesCoordinatesAndMove(gameStat)      
       clearDivs(GAME_PLACE_NUMBER)
       createGameArea(gameStat)
-
     }, 2000),
   }
   GAME_OBJECTS[GAME_PLACE_NUMBER] = gameStat
@@ -113,7 +111,6 @@ function createEmptyMass(gameBoardSize) {
   const gameBoard = new Array(gameBoardSize)
     .fill(FREE_CELL)
     .map(() => new Array(gameBoardSize).fill(FREE_CELL))
-
   return gameBoard
 }
 
@@ -144,8 +141,7 @@ function setCharacters(gamePlaceArr, character, characterCount) {
   }
 }
 
-function findCordOfCharacter(gamePlaceArr, character) {
-  
+function findCordOfCharacter(gamePlaceArr, character) {  
   const findInGameplace = function (accumulator, row, x) {
     row.forEach((element, y) => {
       if (element === character) {
@@ -186,7 +182,6 @@ function removeListeners(element) {
 }
 
 function moveRabbit(gameStat, rabbitMoveBtn) {
-
     const moveLeft = getBtnElements(gameStat, "leftBtn")
     moveLeft.addEventListener('click',function(){
       addEventsForRabbitMoveBtn(gameStat,rabbitMoveBtn.LEFT.direction) 
@@ -381,8 +376,7 @@ function changeWolvesCellBackground(boxIndex,color){
   imgDiv.style.backgroundColor = color
 }
 
-function createGameArea(gameStat) {
-  
+function createGameArea(gameStat) {  
   const gamePlaceArr = gameStat.matrix
   gamePlaceArr.forEach((row, i) => {
     row.forEach((column, j) => {
