@@ -3,8 +3,6 @@
   margin: 0;
   box-sizing: border-box;
 }
-
-
 .container {
   background-color: lightgrey;
   padding: 20px;
@@ -13,10 +11,6 @@
   align-items: center;
   justify-content: center;
 }
-
-
-
-
 .selectDiv{
   display: flex;
   justify-content: left;
@@ -117,9 +111,7 @@
   height: 60px;
   border: 1px solid black;
   margin: 1px;
-
 }
-
 .showMessage{
   display: none;
   text-align: center;
@@ -134,8 +126,7 @@
 .showMessage > button{
   border: 1px solid red;
   font-size: 15px;
-  width: 100px;
-  
+  width: 100px;  
   margin: 5px;
   border-radius: 15px;
   outline: none;
